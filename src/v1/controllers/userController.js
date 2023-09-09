@@ -15,8 +15,43 @@ module.exports = {
     try {
       const { req } = context;
       const { i18n, userId } = req;
-      return [];
-      // return UserService.getUsers();
+      const { firstName, lastName, userName, password, role } = args;
+      return UserService.addUser(
+        i18n,
+        firstName,
+        lastName,
+        userName,
+        password,
+        role
+      );
+    } catch (error) {
+      throw error;
+    }
+  },
+  async deleteUser(parent, args, context, info) {
+    try {
+      const { req } = context;
+      const { i18n, userId } = req;
+      const { id } = args;
+      return UserService.deleteUser(i18n, id);
+    } catch (error) {
+      throw error;
+    }
+  },
+  async editUser(parent, args, context, info) {
+    try {
+      const { req } = context;
+      const { i18n } = req;
+      const { userId, firstName, lastName, userName, password, role } = args;
+      return UserService.editUser(
+        i18n,
+        userId,
+        firstName,
+        lastName,
+        userName,
+        password,
+        role
+      );
     } catch (error) {
       throw error;
     }

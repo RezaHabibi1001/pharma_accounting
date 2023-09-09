@@ -1,7 +1,6 @@
-const { ProviderEnum } = require("../utils/enum");
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-
+const { RoleEnum } = require("../utils/enum");
 const userModel = new Schema(
   {
     firstName: {
@@ -16,30 +15,28 @@ const userModel = new Schema(
       trim: true,
       required: true,
     },
-    email: {
-      type: String,
-      minlength: [5, "Email must be more than 5 characters."],
-      maxlength: [80, "Email must be less than 80 characters."],
-      trim: true,
-    },
+
     userName: {
       type: String,
       required: true,
       unique: true,
       trim: true,
     },
-
     password: {
       type: String,
       unique: false,
       trim: true,
       default: "",
     },
+    role: {
+      type: String,
+      enum: RoleEnum,
+    },
   },
   { timestamps: true }
 );
-userModel.index({ username: "text" });
-userModel.index({ firstname: "text" });
-userModel.index({ lastname: "text" });
+userModel.index({ userName: "text" });
+userModel.index({ firstName: "text" });
+userModel.index({ lastName: "text" });
 
 module.exports = mongoose.model("User", userModel);
