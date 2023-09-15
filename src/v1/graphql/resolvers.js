@@ -40,6 +40,12 @@ const {
   deleteDrug,
   editDrug,
 } = require("../controllers/drugController");
+const {
+  getChecks,
+  addCheck,
+  deleteCheck,
+  editCheck,
+} = require("../controllers/checkController");
 
 const resolvers = {
   Mutation: {
@@ -64,6 +70,9 @@ const resolvers = {
     addDrug,
     deleteDrug,
     editDrug,
+    addCheck,
+    deleteCheck,
+    editCheck,
   },
   Query: {
     getUsers,
@@ -73,6 +82,7 @@ const resolvers = {
     getEmployees,
     getCustomers,
     getDrugs,
+    getChecks,
   },
 };
 

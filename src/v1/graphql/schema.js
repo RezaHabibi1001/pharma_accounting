@@ -36,6 +36,10 @@ const typeDefs = gql`
     Exchange
     Card_to_card
   }
+  enum CheckTypeEnum {
+    Check_In
+    Check_Out
+  }
   type Remittance {
     _id: ID
     number: String
@@ -80,6 +84,16 @@ const typeDefs = gql`
     expDate: String
     createdAt: DateTime
   }
+  type Check {
+    _id: ID
+    checkInNumber: Int
+    checkOutNumber: Int
+    checkType: String
+    date: String
+    amount: Int
+    description: String
+    customer: Customer
+  }
 
   type Query {
     getUsers: [User]
@@ -89,6 +103,7 @@ const typeDefs = gql`
     getEmployees: [Employee]
     getCustomers: [Customer]
     getDrugs: [Drug]
+    getChecks: [Check]
   }
   type Mutation {
     addUser(
@@ -193,6 +208,22 @@ const typeDefs = gql`
       expDate: String
     ): Drug
     deleteDrug(id: ID!): Message
+    addCheck(
+      checkType: CheckTypeEnum!
+      date: String!
+      amount: Int!
+      description: String
+      customer: ID!
+    ): Check
+    editCheck(
+      checkId: ID!
+      checkType: CheckTypeEnum!
+      date: String!
+      amount: Int!
+      description: String
+      customer: ID!
+    ): Check
+    deleteCheck(id: ID!): Message
   }
 
   schema {
