@@ -3,6 +3,7 @@ const {
   addUser,
   deleteUser,
   editUser,
+  login,
 } = require("../controllers/userController");
 const {
   getDrugTypes,
@@ -81,8 +82,9 @@ const resolvers = {
     deleteCheck,
     editCheck,
     addFactor,
-    deleteFactor,
     editFactor,
+    deleteFactor,
+    login,
   },
   Query: {
     getUsers,

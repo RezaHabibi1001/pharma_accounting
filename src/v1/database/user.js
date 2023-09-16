@@ -76,9 +76,22 @@ const editUser = async (
     throw error;
   }
 };
+const login = async (i18n, userName, password) => {
+  try {
+    let user = await User.findOne({ userName, password });
+    if (!user) {
+      throw new Error(i18n.__("userName_password_wrong"));
+    }
+    return user;
+  } catch (error) {
+    Sentry.captureException(error);
+    throw error;
+  }
+};
 module.exports = {
   getUsers,
   addUser,
   deleteUser,
   editUser,
+  login,
 };

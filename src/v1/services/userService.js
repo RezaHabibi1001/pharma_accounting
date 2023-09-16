@@ -91,9 +91,27 @@ const editUser = async (
     throw error;
   }
 };
+const login = async (i18n, userName, password) => {
+  const data = { userName, password };
+  const schema = Joi.object({
+    userName: Joi.string(),
+    password: Joi.string(),
+  });
+  const { error, value } = schema.validate(data);
+  if (error) {
+    throw new Error(error.details[0].message);
+  }
+  try {
+    return await User.login(i18n, userName, password);
+  } catch (error) {
+    Sentry.captureException(error);
+    throw error;
+  }
+};
 module.exports = {
   getUsers,
   addUser,
   deleteUser,
   editUser,
+  login,
 };

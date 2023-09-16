@@ -18,5 +18,6 @@
   "failed_to_delete_customer": "failed to delete customer",
   "drug_deleted_successfully": "Drug has been deleted successfully",
   "failed_to_delete_drug": "Failed to delete drug",
-  "check_deleted_successfully": "check has been deleted successfully"
+  "check_deleted_successfully": "check has been deleted successfully",
+  "userName_password_wrong": "username or password is Wrong"
 }

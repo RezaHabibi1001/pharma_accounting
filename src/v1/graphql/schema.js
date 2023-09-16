@@ -290,6 +290,7 @@ const typeDefs = gql`
       items: [FactorItemInput]
     ): Factor
     deleteFactor(id: ID!): Message
+    login(userName: String, password: String): User
   }
 
   schema {

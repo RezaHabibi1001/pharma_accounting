@@ -56,4 +56,14 @@ module.exports = {
       throw error;
     }
   },
+  async login(parent, args, context, info) {
+    try {
+      const { req } = context;
+      const { i18n } = req;
+      const { userName, password } = args;
+      return UserService.login(i18n, userName, password);
+    } catch (error) {
+      throw error;
+    }
+  },
 };
