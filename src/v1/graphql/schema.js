@@ -129,6 +129,16 @@ const typeDefs = gql`
     customer: Customer
     items: [FactorItem]
   }
+  type Roznamcha {
+    _id: ID
+    bellNumber: Int
+    bellType: String
+    date: String!
+    amount: Int!
+    customer: Customer
+    createdAt: DateTime
+  }
+
   type Query {
     getUsers: [User]
     getDrugTypes: [DrugType]
@@ -139,6 +149,7 @@ const typeDefs = gql`
     getDrugs: [Drug]
     getChecks: [Check]
     getFactors: [Factor]
+    getRoznamcha: [Roznamcha]
   }
   type Mutation {
     addUser(

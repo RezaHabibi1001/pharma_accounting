@@ -52,6 +52,7 @@ const {
   deleteFactor,
   editFactor,
 } = require("../controllers/factorController");
+const { getRoznamcha } = require("../controllers/roznamchaController");
 
 const resolvers = {
   Mutation: {
@@ -93,6 +94,7 @@ const resolvers = {
     getDrugs,
     getChecks,
     getFactors,
+    getRoznamcha,
   },
 };
 
