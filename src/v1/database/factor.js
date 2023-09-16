@@ -1,6 +1,7 @@
 const Factor = require("../models/factor");
 const Customer = require("../models/customer");
 const { addRoznamcha } = require("./roznamcha");
+const { changeExistance } = require("./drug");
 const Sentry = require("../../log");
 const { ObjectId } = require("mongoose").Types;
 const getFactors = async () => {
@@ -71,6 +72,7 @@ const addFactor = async (
         : savedFactor.sellFactorNumber;
     let bellType = factorType;
     await addRoznamcha(bellNumber, bellType, date, amount, customer);
+    await changeExistance(items);
 
     return savedFactor;
   } catch (error) {

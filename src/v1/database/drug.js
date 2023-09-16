@@ -114,9 +114,24 @@ const editDrug = async (
     throw error;
   }
 };
+const changeExistance = async items => {
+  try {
+    let drugIds = items.map(async item => {
+      await Drug.findOneAndUpdate(
+        { _id: item.drug },
+        { $inc: { amount: -item.quantity } },
+        { new: true }
+      );
+    });
+  } catch (error) {
+    Sentry.captureException(error);
+    throw error;
+  }
+};
 module.exports = {
   getDrugs,
   addDrug,
   deleteDrug,
   editDrug,
+  changeExistance,
 };

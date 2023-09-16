@@ -127,7 +127,6 @@ const typeDefs = gql`
     amount: Int!
     description: String
     customer: Customer
-    items: [FactorItem]
   }
   type Roznamcha {
     _id: ID
