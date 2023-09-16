@@ -52,6 +52,7 @@ const {
   addFactor,
   deleteFactor,
   editFactor,
+  getLastFactor,
 } = require("../controllers/factorController");
 const { getRoznamcha } = require("../controllers/roznamchaController");
 
@@ -97,6 +98,7 @@ const resolvers = {
     getChecks,
     getFactors,
     getRoznamcha,
+    getLastFactor,
   },
 };
 

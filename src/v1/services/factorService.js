@@ -136,9 +136,26 @@ const editFactor = async (
     throw error;
   }
 };
+const getLastFactor = async factorType => {
+  const data = { factorType };
+  const schema = Joi.object({
+    factorType: Joi.valid(FactorTypeEnum.BUY, FactorTypeEnum.SELL).required(),
+  });
+  const { error, value } = schema.validate(data);
+  if (error) {
+    throw new Error(error.details[0].message);
+  }
+  try {
+    return await Factor.getLastFactor(factorType);
+  } catch (error) {
+    Sentry.captureException(error);
+    throw error;
+  }
+};
 module.exports = {
   getFactors,
   addFactor,
   deleteFactor,
   editFactor,
+  getLastFactor,
 };

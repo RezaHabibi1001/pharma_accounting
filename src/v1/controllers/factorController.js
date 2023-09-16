@@ -77,4 +77,14 @@ module.exports = {
       throw error;
     }
   },
+  async getLastFactor(parent, args, context, info) {
+    try {
+      const { req } = context;
+      const { i18n, userId } = req;
+      const { factorType } = args;
+      return FactorService.getLastFactor(factorType);
+    } catch (error) {
+      throw error;
+    }
+  },
 };

@@ -121,12 +121,24 @@ const typeDefs = gql`
     _id: ID
     buyFactorNumber: Int
     sellFactorNumber: Int
-    factorType: FactorTypeEnum!
-    paymentType: PaymentTypeEnum!
-    date: String!
-    amount: Int!
+    factorType: FactorTypeEnum
+    paymentType: PaymentTypeEnum
+    date: String
+    amount: Int
     description: String
     customer: Customer
+  }
+  type LastFactor {
+    _id: ID
+    buyFactorNumber: Int
+    sellFactorNumber: Int
+    factorType: FactorTypeEnum
+    paymentType: PaymentTypeEnum
+    date: String
+    amount: Int
+    description: String
+    customer: Customer
+    items: [FactorItem]
   }
   type Roznamcha {
     _id: ID
@@ -149,6 +161,7 @@ const typeDefs = gql`
     getChecks: [Check]
     getFactors: [Factor]
     getRoznamcha: [Roznamcha]
+    getLastFactor(factorType: FactorTypeEnum!): LastFactor
   }
   type Mutation {
     addUser(

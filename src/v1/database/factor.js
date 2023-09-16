@@ -123,9 +123,38 @@ const editFactor = async (
     throw error;
   }
 };
+const getLastFactor = async factorType => {
+  const pipline = [
+    { $match: { factorType } },
+    { $sort: { createdAt: -1 } },
+    {
+      $lookup: {
+        from: "customers",
+        localField: "customer",
+        foreignField: "_id",
+        as: "customer",
+      },
+    },
+    {
+      $unwind: {
+        path: "$customer",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+  ];
+  try {
+    let factors = await Factor.aggregate(pipline);
+    return factors[0];
+    console.log("factor", factors);
+  } catch (error) {
+    Sentry.captureException(error);
+    throw error;
+  }
+};
 module.exports = {
   getFactors,
   addFactor,
   deleteFactor,
   editFactor,
+  getLastFactor,
 };
