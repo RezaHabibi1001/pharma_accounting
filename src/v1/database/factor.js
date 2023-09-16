@@ -127,6 +127,7 @@ const getLastFactor = async factorType => {
   const pipline = [
     { $match: { factorType } },
     { $sort: { createdAt: -1 } },
+    { $limit: 1 },
     {
       $lookup: {
         from: "customers",
@@ -141,11 +142,64 @@ const getLastFactor = async factorType => {
         preserveNullAndEmptyArrays: true,
       },
     },
+    {
+      $lookup: {
+        from: "drugs",
+        localField: "items",
+        foreignField: "_id",
+        pipeline: [
+          {
+            $lookup: {
+              from: "drugs",
+              localField: "drug",
+              foreignField: "_id",
+              pipeline: [
+                {
+                  $project: {
+                    _id: 0,
+                    name: 1,
+                    company: 1,
+                    country: 1,
+                    price: 1,
+                    amount: 1,
+                  },
+                },
+              ],
+              as: "drug",
+            },
+          },
+          {
+            $unwind: "$drug",
+          },
+          {
+            $project: {
+              quantity: 1,
+              price: 1,
+              total: 1,
+              drug: "$drug",
+            },
+          },
+        ],
+        as: "items",
+      },
+    },
+    {
+      $project: {
+        buyFactorNumber: 1,
+        sellFactorNumber: 1,
+        factorType: 1,
+        paymentType: 1,
+        date: 1,
+        amount: 1,
+        description: 1,
+        customer: "$customer",
+        items: "$items",
+      },
+    },
   ];
   try {
     let factors = await Factor.aggregate(pipline);
     return factors[0];
-    console.log("factor", factors);
   } catch (error) {
     Sentry.captureException(error);
     throw error;
