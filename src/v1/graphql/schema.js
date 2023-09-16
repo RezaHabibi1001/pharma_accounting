@@ -40,6 +40,14 @@ const typeDefs = gql`
     Check_In
     Check_Out
   }
+  enum FactorTypeEnum {
+    Buy
+    Sell
+  }
+  enum PaymentTypeEnum {
+    Cash
+    No_Cash
+  }
   type Remittance {
     _id: ID
     number: String
@@ -95,6 +103,32 @@ const typeDefs = gql`
     customer: Customer
   }
 
+  input FactorItemInput {
+    drug: ID!
+    quantity: Int!
+    price: Int!
+    total: Int!
+    description: String
+  }
+  type FactorItem {
+    drug: Drug
+    quantity: Int!
+    price: Int!
+    total: Int!
+    description: String
+  }
+  type Factor {
+    _id: ID
+    buyFactorNumber: Int
+    sellFactorNumber: Int
+    factorType: FactorTypeEnum!
+    paymentType: PaymentTypeEnum!
+    date: String!
+    amount: Int!
+    description: String
+    customer: Customer
+    items: [FactorItem]
+  }
   type Query {
     getUsers: [User]
     getDrugTypes: [DrugType]
@@ -104,6 +138,7 @@ const typeDefs = gql`
     getCustomers: [Customer]
     getDrugs: [Drug]
     getChecks: [Check]
+    getFactors: [Factor]
   }
   type Mutation {
     addUser(
@@ -224,6 +259,26 @@ const typeDefs = gql`
       customer: ID!
     ): Check
     deleteCheck(id: ID!): Message
+    addFactor(
+      factorType: FactorTypeEnum!
+      paymentType: PaymentTypeEnum!
+      date: String!
+      amount: Int!
+      description: String
+      customer: ID!
+      items: [FactorItemInput]
+    ): Factor
+    editFactor(
+      factorId: ID!
+      factorType: FactorTypeEnum!
+      paymentType: PaymentTypeEnum!
+      date: String!
+      amount: Int!
+      description: String
+      customer: ID!
+      items: [FactorItemInput]
+    ): Factor
+    deleteFactor(id: ID!): Message
   }
 
   schema {

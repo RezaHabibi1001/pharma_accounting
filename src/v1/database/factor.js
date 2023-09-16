@@ -1,9 +1,9 @@
-const Check = require("../models/check");
+const Factor = require("../models/factor");
 const Customer = require("../models/customer");
-const Sentry = require("../../log");
 const { addRoznamcha } = require("./roznamcha");
+const Sentry = require("../../log");
 const { ObjectId } = require("mongoose").Types;
-const getChecks = async () => {
+const getFactors = async () => {
   const pipline = [
     {
       $lookup: {
@@ -21,83 +21,98 @@ const getChecks = async () => {
     },
   ];
   try {
-    let checks = await Check.aggregate(pipline);
-    console.log("checks", checks);
-    return checks;
+    let factors = await Factor.aggregate(pipline);
+    return factors;
   } catch (error) {
     Sentry.captureException(error);
     throw error;
   }
 };
-const addCheck = async (
+const addFactor = async (
   i18n,
-  checkType,
+  factorType,
+  paymentType,
   date,
   amount,
   description,
-  customer
+  customer,
+  items
 ) => {
   try {
-    const newCheck = new Check({
-      checkType,
+    const newFactor = new Factor({
+      factorType,
+      paymentType,
       date,
       amount,
       description,
       customer,
+      items,
     });
 
-    let savedCheck = await newCheck.save();
-    if (savedCheck) {
-      let operator = checkType == "Check_In" ? "-" : "+";
+    let operator;
+    if (paymentType == "No_Cash") {
+      if (factorType == "Buy") {
+        operator = "+";
+      } else if (factorType == "Sell") {
+        operator = "-";
+      }
+    }
+    if (operator) {
       await Customer.findOneAndUpdate(
         { _id: ObjectId(customer) },
         { $inc: { balance: operator + amount } },
         { new: true }
       );
     }
+    let savedFactor = await newFactor.save();
     let bellNumber =
-      savedCheck.checkType == "Check_In"
-        ? savedCheck.checkInNumber
-        : savedCheck.checkOutNumber;
-    let bellType = checkType;
+      savedFactor.factorType == "Buy"
+        ? savedFactor.buyFactorNumber
+        : savedFactor.sellFactorNumber;
+    let bellType = factorType;
     await addRoznamcha(bellNumber, bellType, date, amount, customer);
-    return savedCheck;
+
+    return savedFactor;
   } catch (error) {
     Sentry.captureException(error);
     throw error;
   }
 };
-const deleteCheck = async (i18n, id) => {
+const deleteFactor = async (i18n, id) => {
   try {
-    const isDeletedCheck = await Check.findByIdAndRemove(id);
-    if (isDeletedCheck) {
-      return { message: i18n.__("check_deleted_successfully") };
+    const isDeletedFactor = await Factor.findByIdAndRemove(id);
+    if (isDeletedFactor) {
+      return { message: i18n.__("factor_deleted_successfully") };
     } else {
-      return { message: i18n.__("failed_to_delete_customer") };
+      return { message: i18n.__("failed_to_delete_factor") };
     }
   } catch (error) {
     Sentry.captureException(error);
     throw error;
   }
 };
-const editCheck = async (
+const editFactor = async (
   i18n,
-  checkId,
-  checkType,
+  factorId,
+  factorType,
+  paymentType,
   date,
   amount,
   description,
-  customer
+  customer,
+  items
 ) => {
   try {
-    return await Check.findOneAndUpdate(
-      { _id: checkId },
+    return await Factor.findOneAndUpdate(
+      { _id: factorId },
       {
-        checkType,
+        factorType,
+        paymentType,
         date,
         amount,
         description,
         customer,
+        items,
       },
       { new: true }
     );
@@ -107,8 +122,8 @@ const editCheck = async (
   }
 };
 module.exports = {
-  getChecks,
-  addCheck,
-  deleteCheck,
-  editCheck,
+  getFactors,
+  addFactor,
+  deleteFactor,
+  editFactor,
 };

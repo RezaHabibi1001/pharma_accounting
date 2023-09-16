@@ -11,4 +11,19 @@ const CheckTypeEnum = {
   CHECK_IN: "Check_In",
   CHECK_OUT: "Check_Out",
 };
-module.exports = { RoleEnum, RemittanceEnum, CheckTypeEnum };
+const FactorTypeEnum = {
+  BUY: "Buy",
+  SELL: "Sell",
+};
+const PaymentTypeEnum = {
+  CASH: "Cash",
+  NO_CASH: "No_Cash",
+};
+
+module.exports = {
+  RoleEnum,
+  RemittanceEnum,
+  CheckTypeEnum,
+  FactorTypeEnum,
+  PaymentTypeEnum,
+};

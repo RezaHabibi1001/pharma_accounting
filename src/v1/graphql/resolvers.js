@@ -46,6 +46,12 @@ const {
   deleteCheck,
   editCheck,
 } = require("../controllers/checkController");
+const {
+  getFactors,
+  addFactor,
+  deleteFactor,
+  editFactor,
+} = require("../controllers/factorController");
 
 const resolvers = {
   Mutation: {
@@ -73,6 +79,9 @@ const resolvers = {
     addCheck,
     deleteCheck,
     editCheck,
+    addFactor,
+    deleteFactor,
+    editFactor,
   },
   Query: {
     getUsers,
@@ -83,6 +92,7 @@ const resolvers = {
     getCustomers,
     getDrugs,
     getChecks,
+    getFactors,
   },
 };
 
