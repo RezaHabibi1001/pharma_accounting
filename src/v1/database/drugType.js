@@ -33,7 +33,6 @@ const deleteDrugType = async (i18n, id) => {
     const drugExistWithDrugType = await Drug.findOne({
       drugType: ObjectId(id),
     });
-    console.log("drugExistWithDrugType", drugExistWithDrugType);
     if (drugExistWithDrugType) {
       return { message: i18n.__("delete_drugs_before_delete_drugType") };
     }

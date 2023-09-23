@@ -21,5 +21,6 @@
   "check_deleted_successfully": "check has been deleted successfully",
   "userName_password_wrong": "username or password is Wrong",
   "factor_deleted_successfully": "factor_deleted_successfully",
-  "delete_drugs_before_delete_drugType": "please delete related drugs before delete drugType"
+  "delete_drugs_before_delete_drugType": "please delete related drugs before delete drugType",
+  "delete_drugs_before_delete_stack": "please delete related drugs before delete Stack"
 }

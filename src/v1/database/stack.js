@@ -1,5 +1,7 @@
 const Stack = require("../models/stack");
+const Drug = require("../models/drug");
 const Sentry = require("../../log");
+const { ObjectId } = require("mongoose").Types;
 
 const getStacks = async () => {
   try {
@@ -30,6 +32,12 @@ const addStack = async (i18n, name, type, address) => {
 };
 const deleteStack = async (i18n, id) => {
   try {
+    const drugExistWithStack = await Drug.findOne({
+      stack: ObjectId(id),
+    });
+    if (drugExistWithStack) {
+      return { message: i18n.__("delete_drugs_before_delete_stack") };
+    }
     const isStackDeleted = await Stack.findByIdAndRemove(id);
     if (isStackDeleted) {
       return { message: i18n.__("stack_deleted_successfully") };
