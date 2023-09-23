@@ -196,6 +196,16 @@ const typeDefs = gql`
       endAmount: Int
       customer: ID
     ): [Check]
+    reportFactors(
+      factorType: FactorTypeEnum
+      paymentType: PaymentTypeEnum
+      customer: ID
+      drug: ID
+      startDate: DateTime
+      endDate: DateTime
+      startAmount: Int
+      endAmount: Int
+    ): [Factor]
   }
   type Mutation {
     addUser(

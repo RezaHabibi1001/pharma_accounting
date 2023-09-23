@@ -56,6 +56,7 @@ const {
   deleteFactor,
   editFactor,
   getLastFactor,
+  reportFactors,
 } = require("../controllers/factorController");
 const { getRoznamcha } = require("../controllers/roznamchaController");
 
@@ -105,6 +106,7 @@ const resolvers = {
     reportDrugs,
     reportCustomers,
     reportChecks,
+    reportFactors,
   },
 };
 

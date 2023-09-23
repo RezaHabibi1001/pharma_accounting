@@ -152,10 +152,37 @@ const getLastFactor = async factorType => {
     throw error;
   }
 };
+const reportFactors = async (
+  factorType,
+  paymentType,
+  customer,
+  drug,
+  startDate,
+  endDate,
+  startAmount,
+  endAmount
+) => {
+  try {
+    return await Factor.reportFactors(
+      factorType,
+      paymentType,
+      customer,
+      drug,
+      startDate,
+      endDate,
+      startAmount,
+      endAmount
+    );
+  } catch (error) {
+    Sentry.captureException(error);
+    throw error;
+  }
+};
 module.exports = {
   getFactors,
   addFactor,
   deleteFactor,
   editFactor,
   getLastFactor,
+  reportFactors,
 };

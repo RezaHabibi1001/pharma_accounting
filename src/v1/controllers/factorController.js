@@ -87,4 +87,32 @@ module.exports = {
       throw error;
     }
   },
+  async reportFactors(parent, args, context, info) {
+    try {
+      const { req } = context;
+      const { i18n, userId } = req;
+      const {
+        factorType,
+        paymentType,
+        customer,
+        drug,
+        startDate,
+        endDate,
+        startAmount,
+        endAmount,
+      } = args;
+      return FactorService.reportFactors(
+        factorType,
+        paymentType,
+        customer,
+        drug,
+        startDate,
+        endDate,
+        startAmount,
+        endAmount
+      );
+    } catch (error) {
+      throw error;
+    }
+  },
 };

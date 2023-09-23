@@ -231,10 +231,77 @@ const getLastFactor = async factorType => {
     throw error;
   }
 };
+const reportFactors = async (
+  factorType,
+  paymentType,
+  customer,
+  drug,
+  startDate,
+  endDate,
+  startAmount,
+  endAmount
+) => {
+  const filters = [{}];
+  factorType && filters.push({ factorType });
+  paymentType && filters.push({ paymentType });
+  customer && filters.push({ customer: ObjectId(customer) });
+  drug && filters.push({ "items.drug": ObjectId(drug) });
+
+  if (startAmount || endAmount) {
+    if (startAmount && endAmount) {
+      filters.push({
+        amount: { $gte: startAmount, $lte: endAmount },
+      });
+    } else if (startAmount) {
+      filters.push({ amount: { $gte: startAmount } });
+    } else if (endAmount) {
+      filters.push({ amount: { $lte: endAmount } });
+    }
+  }
+
+  if (startDate || endDate) {
+    if (startDate && endDate) {
+      filters.push({
+        date: { $gte: startDate, $lte: endDate },
+      });
+    } else if (startDate) {
+      filters.push({ date: { $gte: startDate } });
+    } else if (endDate) {
+      filters.push({ date: { $lte: endDate } });
+    }
+  }
+  const pipline = [
+    {
+      $match: { $and: filters },
+    },
+    {
+      $lookup: {
+        from: "customers",
+        localField: "customer",
+        foreignField: "_id",
+        as: "customer",
+      },
+    },
+    {
+      $unwind: {
+        path: "$customer",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+  ];
+  try {
+    let factors = await Factor.aggregate(pipline);
+    return factors;
+  } catch (error) {
+    Sentry.captureException(error);
+    throw error;
+  }
+};
 module.exports = {
   getFactors,
   addFactor,
   deleteFactor,
   editFactor,
   getLastFactor,
+  reportFactors,
 };
