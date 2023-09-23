@@ -1,5 +1,7 @@
 const Drug = require("../models/drug");
+const Factor = require("../models/factor");
 const Sentry = require("../../log");
+const { ObjectId } = require("mongoose").Types;
 
 const getDrugs = async () => {
   const pipline = [
@@ -71,6 +73,13 @@ const addDrug = async (
 };
 const deleteDrug = async (i18n, id) => {
   try {
+    const factorItemExistWithDrug = await Factor.findOne({
+      "items.drug": ObjectId(id),
+    });
+    console.log("factorItemExistWithDrug", factorItemExistWithDrug);
+    if (factorItemExistWithDrug) {
+      return { message: i18n.__("delete_factor_before_delete_drug") };
+    }
     const isDeletedDrug = await Drug.findByIdAndRemove(id);
     if (isDeletedDrug) {
       return { message: i18n.__("drug_deleted_successfully") };

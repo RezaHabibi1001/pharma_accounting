@@ -160,7 +160,7 @@ const typeDefs = gql`
     getDrugs: [Drug]
     getChecks: [Check]
     getFactors: [Factor]
-    getRoznamcha: [Roznamcha]
+    getRoznamcha(date: DateTime): [Roznamcha]
     getLastFactor(factorType: FactorTypeEnum!): LastFactor
   }
   type Mutation {

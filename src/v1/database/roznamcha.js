@@ -10,8 +10,13 @@ const addRoznamcha = async (bellNumber, bellType, date, amount, customer) => {
   let savedRoznamcha = await newRoznamcha.save();
   return savedRoznamcha;
 };
-const getRoznamcha = async () => {
+const getRoznamcha = async date => {
   const pipline = [
+    {
+      $match: {
+        date,
+      },
+    },
     {
       $lookup: {
         from: "customers",

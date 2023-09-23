@@ -5,8 +5,8 @@ module.exports = {
     try {
       const { req } = context;
       const { i18n, userId } = req;
-
-      return RoznamchaService.getRoznamcha();
+      const { date } = args;
+      return RoznamchaService.getRoznamcha(date);
     } catch (error) {
       throw error;
     }
