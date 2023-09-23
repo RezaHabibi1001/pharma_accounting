@@ -112,9 +112,34 @@ const editCheck = async (
     throw error;
   }
 };
+
+const reportChecks = async (
+  checkType,
+  startDate,
+  endDate,
+  startAmount,
+  endAmount,
+  customer
+) => {
+  try {
+    return await Check.reportChecks(
+      checkType,
+      startDate,
+      endDate,
+      startAmount,
+      endAmount,
+      customer
+    );
+  } catch (error) {
+    Sentry.captureException(error);
+    throw error;
+  }
+};
+
 module.exports = {
   getChecks,
   addCheck,
   deleteCheck,
   editCheck,
+  reportChecks,
 };

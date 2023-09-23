@@ -173,9 +173,9 @@ const reportDrugs = async (
       filters.push({
         price: { $gte: startPrice, $lte: endPrice },
       });
-    } else if (startDate) {
+    } else if (startPrice) {
       filters.push({ price: { $gte: startPrice } });
-    } else if (endDate) {
+    } else if (endPrice) {
       filters.push({ price: { $lte: endPrice } });
     }
   }

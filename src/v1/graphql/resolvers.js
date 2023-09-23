@@ -48,6 +48,7 @@ const {
   addCheck,
   deleteCheck,
   editCheck,
+  reportChecks,
 } = require("../controllers/checkController");
 const {
   getFactors,
@@ -103,6 +104,7 @@ const resolvers = {
     getLastFactor,
     reportDrugs,
     reportCustomers,
+    reportChecks,
   },
 };
 

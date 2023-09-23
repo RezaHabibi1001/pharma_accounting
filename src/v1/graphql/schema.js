@@ -188,6 +188,14 @@ const typeDefs = gql`
       startBalance: Int
       endBalance: Int
     ): [Customer]
+    reportChecks(
+      checkType: CheckTypeEnum
+      startDate: DateTime
+      endDate: DateTime
+      startAmount: Int
+      endAmount: Int
+      customer: ID
+    ): [Check]
   }
   type Mutation {
     addUser(

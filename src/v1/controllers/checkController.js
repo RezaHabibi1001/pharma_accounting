@@ -56,4 +56,28 @@ module.exports = {
       throw error;
     }
   },
+  async reportChecks(parent, args, context, info) {
+    try {
+      const { req } = context;
+      const { i18n, userId } = req;
+      const {
+        checkType,
+        startDate,
+        endDate,
+        startAmount,
+        endAmount,
+        customer,
+      } = args;
+      return CheckService.reportChecks(
+        checkType,
+        startDate,
+        endDate,
+        startAmount,
+        endAmount,
+        customer
+      );
+    } catch (error) {
+      throw error;
+    }
+  },
 };

@@ -124,9 +124,72 @@ const editCheck = async (
     throw error;
   }
 };
+const reportChecks = async (
+  checkType,
+  startDate,
+  endDate,
+  startAmount,
+  endAmount,
+  customer
+) => {
+  const filters = [{}];
+  checkType && filters.push({ checkType });
+  customer && filters.push({ customer: ObjectId(customer) });
+
+  if (startAmount || endAmount) {
+    if (startAmount && endAmount) {
+      filters.push({
+        amount: { $gte: startAmount, $lte: endAmount },
+      });
+    } else if (startAmount) {
+      filters.push({ amount: { $gte: startAmount } });
+    } else if (endAmount) {
+      filters.push({ amount: { $lte: endAmount } });
+    }
+  }
+
+  if (startDate || endDate) {
+    if (startDate && endDate) {
+      filters.push({
+        date: { $gte: startDate, $lte: endDate },
+      });
+    } else if (startDate) {
+      filters.push({ date: { $gte: startDate } });
+    } else if (endDate) {
+      filters.push({ date: { $lte: endDate } });
+    }
+  }
+  const pipline = [
+    {
+      $match: { $and: filters },
+    },
+    {
+      $lookup: {
+        from: "customers",
+        localField: "customer",
+        foreignField: "_id",
+        as: "customer",
+      },
+    },
+    {
+      $unwind: {
+        path: "$customer",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+  ];
+  try {
+    let checks = await Check.aggregate(pipline);
+    return checks;
+  } catch (error) {
+    Sentry.captureException(error);
+    throw error;
+  }
+};
 module.exports = {
   getChecks,
   addCheck,
   deleteCheck,
   editCheck,
+  reportChecks,
 };
