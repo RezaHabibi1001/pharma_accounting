@@ -1,5 +1,7 @@
 const DrugType = require("../models/drugType");
+const Drug = require("../models/drug");
 const Sentry = require("../../log");
+const { ObjectId } = require("mongoose").Types;
 
 const getDrugTypes = async () => {
   try {
@@ -28,6 +30,13 @@ const addDrugType = async (i18n, title) => {
 };
 const deleteDrugType = async (i18n, id) => {
   try {
+    const drugExistWithDrugType = await Drug.findOne({
+      drugType: ObjectId(id),
+    });
+    console.log("drugExistWithDrugType", drugExistWithDrugType);
+    if (drugExistWithDrugType) {
+      return { message: i18n.__("delete_drugs_before_delete_drugType") };
+    }
     const isDeletedDrugType = await DrugType.findByIdAndRemove(id);
     if (isDeletedDrugType) {
       return { message: i18n.__("drugType_deleted_successfully") };

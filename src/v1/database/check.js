@@ -3,6 +3,7 @@ const Customer = require("../models/customer");
 const Sentry = require("../../log");
 const { addRoznamcha } = require("./roznamcha");
 const { ObjectId } = require("mongoose").Types;
+const { CheckTypeEnum } = require("../utils/enum");
 const getChecks = async () => {
   const pipline = [
     {
@@ -69,12 +70,29 @@ const addCheck = async (
 };
 const deleteCheck = async (i18n, id) => {
   try {
-    const isDeletedCheck = await Check.findByIdAndRemove(id);
-    if (isDeletedCheck) {
-      return { message: i18n.__("check_deleted_successfully") };
-    } else {
-      return { message: i18n.__("failed_to_delete_customer") };
+    const { amount, customer, checkType } = await Check.findById(id);
+    const { balance } = await Customer.findById({ _id: customer });
+    if (checkType == CheckTypeEnum.CHECK_OUT) {
+      const updatedCustomer = await Customer.findOneAndUpdate(
+        { _id: customer },
+        { balance: balance - amount }
+      );
+      if (updatedCustomer) {
+        const isDeletedCheck = await Check.findByIdAndRemove(id);
+        return { message: i18n.__("check_deleted_successfully") };
+      }
     }
+    if (checkType == CheckTypeEnum.CHECK_IN) {
+      const updatedCustomer = await Customer.findOneAndUpdate(
+        { _id: customer },
+        { balance: balance + amount }
+      );
+      if (updatedCustomer) {
+        const isDeletedCheck = await Check.findByIdAndRemove(id);
+        return { message: i18n.__("check_deleted_successfully") };
+      }
+    }
+    return { message: i18n.__("failed_to_delete_customer") };
   } catch (error) {
     Sentry.captureException(error);
     throw error;

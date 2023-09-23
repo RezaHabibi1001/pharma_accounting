@@ -19,5 +19,7 @@
   "drug_deleted_successfully": "Drug has been deleted successfully",
   "failed_to_delete_drug": "Failed to delete drug",
   "check_deleted_successfully": "check has been deleted successfully",
-  "userName_password_wrong": "username or password is Wrong"
+  "userName_password_wrong": "username or password is Wrong",
+  "factor_deleted_successfully": "factor_deleted_successfully",
+  "delete_drugs_before_delete_drugType": "please delete related drugs before delete drugType"
 }
