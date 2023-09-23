@@ -134,9 +134,44 @@ const editDrug = async (
     throw error;
   }
 };
+
+const reportDrugs = async (
+  drugType,
+  drugName,
+  drugCompany,
+  drugCountry,
+  drugStack,
+  startAmount,
+  endAmount,
+  startPrice,
+  endPrice,
+  startDate,
+  endDate
+) => {
+  try {
+    return await Drug.reportDrugs(
+      drugType,
+      drugName,
+      drugCompany,
+      drugCountry,
+      drugStack,
+      startAmount,
+      endAmount,
+      startPrice,
+      endPrice,
+      startDate,
+      endDate
+    );
+  } catch (error) {
+    Sentry.captureException(error);
+    throw error;
+  }
+};
+
 module.exports = {
   getDrugs,
   addDrug,
   deleteDrug,
   editDrug,
+  reportDrugs,
 };

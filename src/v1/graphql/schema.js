@@ -162,6 +162,19 @@ const typeDefs = gql`
     getFactors: [Factor]
     getRoznamcha(date: DateTime): [Roznamcha]
     getLastFactor(factorType: FactorTypeEnum!): LastFactor
+    reportDrugs(
+      drugType: ID
+      drugName: String
+      drugCompany: String
+      drugCountry: String
+      drugStack: String
+      startAmount: Int
+      endAmount: Int
+      startPrice: Int
+      endPrice: Int
+      startDate: DateTime
+      endDate: DateTime
+    ): [Drug]
   }
   type Mutation {
     addUser(

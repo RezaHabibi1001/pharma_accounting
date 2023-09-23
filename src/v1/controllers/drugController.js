@@ -81,4 +81,38 @@ module.exports = {
       throw error;
     }
   },
+  async reportDrugs(parent, args, context, info) {
+    try {
+      const { req } = context;
+      const { i18n, userId } = req;
+      const {
+        drugType,
+        drugName,
+        drugCompany,
+        drugCountry,
+        drugStack,
+        startAmount,
+        endAmount,
+        startPrice,
+        endPrice,
+        startDate,
+        endDate,
+      } = args;
+      return DrugService.reportDrugs(
+        drugType,
+        drugName,
+        drugCompany,
+        drugCountry,
+        drugStack,
+        startAmount,
+        endAmount,
+        startPrice,
+        endPrice,
+        startDate,
+        endDate
+      );
+    } catch (error) {
+      throw error;
+    }
+  },
 };

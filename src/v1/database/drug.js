@@ -137,10 +137,106 @@ const changeExistance = async items => {
     throw error;
   }
 };
+const reportDrugs = async (
+  drugType,
+  drugName,
+  drugCompany,
+  drugCountry,
+  drugStack,
+  startAmount,
+  endAmount,
+  startPrice,
+  endPrice,
+  startDate,
+  endDate
+) => {
+  const filters = [{}];
+  drugType && filters.push({ drugType: ObjectId(drugType) });
+  drugName && filters.push({ name: drugName });
+  drugCompany && filters.push({ company: drugCompany });
+  drugCountry && filters.push({ country: drugCountry });
+  drugStack && filters.push({ stack: ObjectId(drugStack) });
+
+  if (startAmount || endAmount) {
+    if (startAmount && endAmount) {
+      filters.push({
+        amount: { $gte: startAmount, $lte: endAmount },
+      });
+    } else if (startDate) {
+      filters.push({ amount: { $gte: startAmount } });
+    } else if (endDate) {
+      filters.push({ amount: { $lte: endAmount } });
+    }
+  }
+  if (startPrice || endPrice) {
+    if (startPrice && endPrice) {
+      filters.push({
+        price: { $gte: startPrice, $lte: endPrice },
+      });
+    } else if (startDate) {
+      filters.push({ price: { $gte: startPrice } });
+    } else if (endDate) {
+      filters.push({ price: { $lte: endPrice } });
+    }
+  }
+  if (startDate || endDate) {
+    if (startDate && endDate) {
+      filters.push({
+        expDate: { $gte: new Date(startDate), $lte: new Date(endDate) },
+      });
+    } else if (startDate) {
+      filters.push({ expDate: { $gte: startDate } });
+    } else if (endDate) {
+      filters.push({ expDate: { $lte: endDate } });
+    }
+  }
+  const pipline = [
+    {
+      $match: { $and: filters },
+    },
+    {
+      $lookup: {
+        from: "drugtypes",
+        localField: "drugType",
+        foreignField: "_id",
+        as: "drugType",
+      },
+    },
+    {
+      $unwind: {
+        path: "$drugType",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $lookup: {
+        from: "stacks",
+        localField: "stack",
+        foreignField: "_id",
+        as: "stack",
+      },
+    },
+    {
+      $unwind: {
+        path: "$stack",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+  ];
+  try {
+    let drugs = await Drug.aggregate(pipline);
+    console.log("drugs", drugs);
+    return drugs;
+  } catch (error) {
+    Sentry.captureException(error);
+    throw error;
+  }
+};
 module.exports = {
   getDrugs,
   addDrug,
   deleteDrug,
   editDrug,
   changeExistance,
+  reportDrugs,
 };
