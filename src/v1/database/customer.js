@@ -1,6 +1,6 @@
 const Customer = require("../models/customer");
 const Sentry = require("../../log");
-
+const { BalanceStatus } = require("../utils/enum");
 const getCustomers = async () => {
   try {
     return await Customer.find();
@@ -87,9 +87,53 @@ const editCustomer = async (
     throw error;
   }
 };
+const reportCustomers = async (
+  fullName,
+  balanceStatus,
+  city,
+  address,
+  startBalance,
+  endBalance
+) => {
+  const filters = [{}];
+  fullName && filters.push({ fullName });
+  city && filters.push({ city });
+  address && filters.push({ address });
+
+  if (balanceStatus) {
+    if (balanceStatus == BalanceStatus.POSITIVE) {
+      filters.push({ balance: { $gt: 0 } });
+    } else if (balanceStatus == BalanceStatus.NEGATIVE) {
+      filters.push({ balance: { $lt: 0 } });
+    } else if (balanceStatus == BalanceStatus.ZERO) {
+      filters.push({ balance: 0 });
+    }
+  }
+  if (startBalance || endBalance) {
+    if (startBalance && endBalance) {
+      filters.push({
+        balance: { $gte: startBalance, $lte: endBalance },
+      });
+    } else if (startBalance) {
+      filters.push({ balance: { $gte: startBalance } });
+    } else if (endBalance) {
+      filters.push({ balance: { $lte: endBalance } });
+    }
+  }
+
+  const pipline = [{ $match: { $and: filters } }];
+  try {
+    let customers = await Customer.aggregate(pipline);
+    return customers;
+  } catch (error) {
+    Sentry.captureException(error);
+    throw error;
+  }
+};
 module.exports = {
   getCustomers,
   addCustomer,
   deleteCustomer,
   editCustomer,
+  reportCustomers,
 };

@@ -19,6 +19,11 @@ const PaymentTypeEnum = {
   CASH: "Cash",
   NO_CASH: "No_Cash",
 };
+const BalanceStatus = {
+  POSITIVE: "Positive",
+  NEGATIVE: "Negative",
+  ZERO: "Zero",
+};
 
 module.exports = {
   RoleEnum,
@@ -26,4 +31,5 @@ module.exports = {
   CheckTypeEnum,
   FactorTypeEnum,
   PaymentTypeEnum,
+  BalanceStatus,
 };

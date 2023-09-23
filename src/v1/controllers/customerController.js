@@ -66,4 +66,28 @@ module.exports = {
       throw error;
     }
   },
+  async reportCustomers(parent, args, context, info) {
+    try {
+      const { req } = context;
+      const { i18n, userId } = req;
+      const {
+        fullName,
+        balanceStatus,
+        city,
+        address,
+        startBalance,
+        endBalance,
+      } = args;
+      return CustomerService.reportCustomers(
+        fullName,
+        balanceStatus,
+        city,
+        address,
+        startBalance,
+        endBalance
+      );
+    } catch (error) {
+      throw error;
+    }
+  },
 };

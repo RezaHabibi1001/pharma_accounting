@@ -34,6 +34,7 @@ const {
   addCustomer,
   deleteCustomer,
   editCustomer,
+  reportCustomers,
 } = require("../controllers/customerController");
 const {
   getDrugs,
@@ -101,6 +102,7 @@ const resolvers = {
     getRoznamcha,
     getLastFactor,
     reportDrugs,
+    reportCustomers,
   },
 };
 

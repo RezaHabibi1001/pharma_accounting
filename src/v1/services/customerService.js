@@ -111,9 +111,32 @@ const editCustomer = async (
     throw error;
   }
 };
+const reportCustomers = async (
+  fullName,
+  balanceStatus,
+  city,
+  address,
+  startBalance,
+  endBalance
+) => {
+  try {
+    return await Customer.reportCustomers(
+      fullName,
+      balanceStatus,
+      city,
+      address,
+      startBalance,
+      endBalance
+    );
+  } catch (error) {
+    Sentry.captureException(error);
+    throw error;
+  }
+};
 module.exports = {
   getCustomers,
   addCustomer,
   deleteCustomer,
   editCustomer,
+  reportCustomers,
 };

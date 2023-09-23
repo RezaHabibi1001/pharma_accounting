@@ -48,6 +48,11 @@ const typeDefs = gql`
     Cash
     No_Cash
   }
+  enum BalanceStatusEnum {
+    Positive
+    Negative
+    Zero
+  }
   type Remittance {
     _id: ID
     number: String
@@ -175,6 +180,14 @@ const typeDefs = gql`
       startDate: DateTime
       endDate: DateTime
     ): [Drug]
+    reportCustomers(
+      fullName: String
+      balanceStatus: BalanceStatusEnum
+      city: String
+      address: String
+      startBalance: Int
+      endBalance: Int
+    ): [Customer]
   }
   type Mutation {
     addUser(
