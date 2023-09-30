@@ -1,5 +1,6 @@
 const Factor = require("../models/factor");
 const Customer = require("../models/customer");
+const Roznamcha = require("../models/roznamcha");
 const { addRoznamcha } = require("./roznamcha");
 const { changeExistance } = require("./drug");
 const Sentry = require("../../log");
@@ -83,35 +84,42 @@ const addFactor = async (
 };
 const deleteFactor = async (i18n, id) => {
   try {
-    const { amount, customer, factorType, paymentType } = await Factor.findById(
-      id
-    );
+    const {
+      amount,
+      customer,
+      factorType,
+      paymentType,
+      buyFactorNumber,
+      sellFactorNumber,
+    } = await Factor.findById(id);
     const { balance } = await Customer.findById({ _id: customer });
-    if (
-      factorType == FactorTypeEnum.BUY &&
-      paymentType == PaymentTypeEnum.NO_CASH
-    ) {
-      const updatedCustomer = await Customer.findOneAndUpdate(
-        { _id: customer },
-        { balance: balance - amount }
-      );
-      if (updatedCustomer) {
-        const isDeletedFactor = await Factor.findByIdAndRemove(id);
-        return { message: i18n.__("factor_deleted_successfully") };
+    if (factorType == FactorTypeEnum.BUY) {
+      const isDeletedRoznamcha = await Roznamcha.findOneAndRemove({
+        bellType: FactorTypeEnum.BUY,
+        bellNumber: buyFactorNumber,
+      });
+      if (paymentType == PaymentTypeEnum.NO_CASH) {
+        const updatedCustomer = await Customer.findOneAndUpdate(
+          { _id: customer },
+          { balance: balance - amount }
+        );
       }
     }
-    if (
-      factorType == FactorTypeEnum.SELL &&
-      paymentType == PaymentTypeEnum.NO_CASH
-    ) {
-      const updatedCustomer = await Customer.findOneAndUpdate(
-        { _id: customer },
-        { balance: balance + amount }
-      );
-      if (updatedCustomer) {
-        const isDeletedFactor = await Factor.findByIdAndRemove(id);
-        return { message: i18n.__("factor_deleted_successfully") };
+    if (factorType == FactorTypeEnum.SELL) {
+      const isDeletedRoznamcha = await Roznamcha.findOneAndRemove({
+        bellType: FactorTypeEnum.SELL,
+        bellNumber: sellFactorNumber,
+      });
+      if (paymentType == PaymentTypeEnum.NO_CASH) {
+        const updatedCustomer = await Customer.findOneAndUpdate(
+          { _id: customer },
+          { balance: balance + amount }
+        );
       }
+    }
+    const isDeletedFactor = await Factor.findByIdAndRemove(id);
+    if (isDeletedFactor) {
+      return { message: i18n.__("factor_deleted_successfully") };
     }
     return { message: i18n.__("failed_to_delete_factor") };
   } catch (error) {

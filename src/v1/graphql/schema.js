@@ -116,6 +116,8 @@ const typeDefs = gql`
     description: String
   }
   type FactorItem {
+    buyFactorNumber: Int
+    sellFactorNumber: Int
     drug: Drug
     quantity: Int!
     price: Int!

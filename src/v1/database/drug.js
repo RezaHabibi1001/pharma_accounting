@@ -36,7 +36,6 @@ const getDrugs = async () => {
   ];
   try {
     let drugs = await Drug.aggregate(pipline);
-    console.log("drugs", drugs);
     return drugs;
   } catch (error) {
     Sentry.captureException(error);
@@ -76,7 +75,6 @@ const deleteDrug = async (i18n, id) => {
     const factorItemExistWithDrug = await Factor.findOne({
       "items.drug": ObjectId(id),
     });
-    console.log("factorItemExistWithDrug", factorItemExistWithDrug);
     if (factorItemExistWithDrug) {
       return { message: i18n.__("delete_factor_before_delete_drug") };
     }
@@ -225,7 +223,6 @@ const reportDrugs = async (
   ];
   try {
     let drugs = await Drug.aggregate(pipline);
-    console.log("drugs", drugs);
     return drugs;
   } catch (error) {
     Sentry.captureException(error);

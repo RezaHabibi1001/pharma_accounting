@@ -1,5 +1,6 @@
 const Check = require("../models/check");
 const Customer = require("../models/customer");
+const Roznamcha = require("../models/roznamcha");
 const Sentry = require("../../log");
 const { addRoznamcha } = require("./roznamcha");
 const { ObjectId } = require("mongoose").Types;
@@ -70,13 +71,18 @@ const addCheck = async (
 };
 const deleteCheck = async (i18n, id) => {
   try {
-    const { amount, customer, checkType } = await Check.findById(id);
+    const { amount, customer, checkType, checkInNumber, checkOutNumber } =
+      await Check.findById(id);
     const { balance } = await Customer.findById({ _id: customer });
     if (checkType == CheckTypeEnum.CHECK_OUT) {
       const updatedCustomer = await Customer.findOneAndUpdate(
         { _id: customer },
         { balance: balance - amount }
       );
+      const isDeletedRoznamcha = await Roznamcha.findOneAndRemove({
+        bellType: CheckTypeEnum.CHECK_OUT,
+        bellNumber: checkOutNumber,
+      });
       if (updatedCustomer) {
         const isDeletedCheck = await Check.findByIdAndRemove(id);
         return { message: i18n.__("check_deleted_successfully") };
@@ -87,11 +93,17 @@ const deleteCheck = async (i18n, id) => {
         { _id: customer },
         { balance: balance + amount }
       );
+      const isDeletedRoznamcha = await Roznamcha.findOneAndRemove({
+        bellType: CheckTypeEnum.CHECK_IN,
+        bellNumber: checkInNumber,
+      });
+
       if (updatedCustomer) {
         const isDeletedCheck = await Check.findByIdAndRemove(id);
         return { message: i18n.__("check_deleted_successfully") };
       }
     }
+
     return { message: i18n.__("failed_to_delete_customer") };
   } catch (error) {
     Sentry.captureException(error);
