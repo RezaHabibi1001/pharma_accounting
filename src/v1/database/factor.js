@@ -2,7 +2,7 @@ const Factor = require("../models/factor");
 const Customer = require("../models/customer");
 const Roznamcha = require("../models/roznamcha");
 const { addRoznamcha } = require("./roznamcha");
-const { changeExistance } = require("./drug");
+const { changeExistance, rollbackDrug } = require("./drug");
 const Sentry = require("../../log");
 const { ObjectId } = require("mongoose").Types;
 const { FactorTypeEnum, PaymentTypeEnum } = require("../utils/enum");
@@ -74,7 +74,7 @@ const addFactor = async (
         : savedFactor.sellFactorNumber;
     let bellType = factorType;
     await addRoznamcha(bellNumber, bellType, date, amount, customer);
-    await changeExistance(items);
+    await changeExistance(items, factorType);
 
     return savedFactor;
   } catch (error) {
@@ -91,6 +91,7 @@ const deleteFactor = async (i18n, id) => {
       paymentType,
       buyFactorNumber,
       sellFactorNumber,
+      items,
     } = await Factor.findById(id);
     const { balance } = await Customer.findById({ _id: customer });
     if (factorType == FactorTypeEnum.BUY) {
@@ -117,6 +118,7 @@ const deleteFactor = async (i18n, id) => {
         );
       }
     }
+    await rollbackDrug(items, factorType);
     const isDeletedFactor = await Factor.findByIdAndRemove(id);
     if (isDeletedFactor) {
       return { message: i18n.__("factor_deleted_successfully") };

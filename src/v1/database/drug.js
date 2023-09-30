@@ -2,7 +2,7 @@ const Drug = require("../models/drug");
 const Factor = require("../models/factor");
 const Sentry = require("../../log");
 const { ObjectId } = require("mongoose").Types;
-
+const { FactorTypeEnum } = require("../utils/enum");
 const getDrugs = async () => {
   const pipline = [
     {
@@ -121,15 +121,51 @@ const editDrug = async (
     throw error;
   }
 };
-const changeExistance = async items => {
+const changeExistance = async (items, factorType) => {
   try {
-    let drugIds = items.map(async item => {
-      await Drug.findOneAndUpdate(
-        { _id: item.drug },
-        { $inc: { amount: -item.quantity } },
-        { new: true }
-      );
-    });
+    if (factorType == FactorTypeEnum.SELL) {
+      items.map(async item => {
+        await Drug.findOneAndUpdate(
+          { _id: item.drug },
+          { $inc: { amount: -item.quantity } },
+          { new: true }
+        );
+      });
+    }
+    if (factorType == FactorTypeEnum.BUY) {
+      items.map(async item => {
+        await Drug.findOneAndUpdate(
+          { _id: item.drug },
+          { $inc: { amount: item.quantity } },
+          { new: true }
+        );
+      });
+    }
+  } catch (error) {
+    Sentry.captureException(error);
+    throw error;
+  }
+};
+const rollbackDrug = async (items, factorType) => {
+  try {
+    if (factorType == FactorTypeEnum.SELL) {
+      items.map(async item => {
+        await Drug.findOneAndUpdate(
+          { _id: item.drug },
+          { $inc: { amount: item.quantity } },
+          { new: true }
+        );
+      });
+    }
+    if (factorType == FactorTypeEnum.BUY) {
+      items.map(async item => {
+        await Drug.findOneAndUpdate(
+          { _id: item.drug },
+          { $inc: { amount: -item.quantity } },
+          { new: true }
+        );
+      });
+    }
   } catch (error) {
     Sentry.captureException(error);
     throw error;
@@ -236,4 +272,5 @@ module.exports = {
   editDrug,
   changeExistance,
   reportDrugs,
+  rollbackDrug,
 };
