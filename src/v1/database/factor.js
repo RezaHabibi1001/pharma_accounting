@@ -132,7 +132,6 @@ const deleteFactor = async (i18n, id) => {
 const editFactor = async (
   i18n,
   factorId,
-  factorType,
   paymentType,
   date,
   amount,
@@ -140,20 +139,71 @@ const editFactor = async (
   customer,
   items
 ) => {
+  function defineBellType() {
+    if (oldFactor.factorType == FactorTypeEnum.SELL) {
+      return oldFactor.sellFactorNumber;
+    } else {
+      return oldFactor.buyFactorNumber;
+    }
+  }
   try {
-    return await Factor.findOneAndUpdate(
-      { _id: factorId },
-      {
-        factorType,
-        paymentType,
-        date,
-        amount,
-        description,
-        customer,
-        items,
-      },
-      { new: true }
-    );
+    const oldFactor = await Factor.findById(factorId);
+    console.log(oldFactor);
+    // const updateFactor = await Factor.findOneAndUpdate(
+    //   { _id: factorId },
+    //   {
+    //     paymentType,
+    //     date,
+    //     amount,
+    //     description,
+    //     customer,
+    //     items,
+    //   },
+    //   { new: true }
+    // );
+
+    // if (date) {
+    //   const updateRozenamcha = await Roznamcha.findOneAndUpdate(
+    //     {
+    //       bellType: oldFactor.factorType,
+    //       paymentType: oldFactor.paymentType,
+    //       bellNumber: defineBellType(),
+    //     },
+    //     { date }
+    //   );
+    //   console.log("updateRozenamcha", updateRozenamcha);
+    // }
+
+    if (customer != oldFactor.customer) {
+      console.log("cond 0");
+
+      if (oldFactor.paymentType == PaymentTypeEnum.NO_CASH) {
+        console.log("cond 1");
+        if (oldFactor.factorType == FactorTypeEnum.SELL) {
+          console.log("cond 2");
+
+          // add old price  to custepmer
+          await Customer.findOneAndUpdate(
+            { _id: ObjectId(customer) },
+            { $inc: { balance: oldFactor.amount } },
+            { new: true }
+          );
+        } else if (oldFactor.factorType == FactorTypeEnum.BUY) {
+          console.log("cond 3");
+
+          // subtract the buy value from customer
+          await Customer.findOneAndUpdate(
+            { _id: ObjectId(customer) },
+            { $inc: { balance: -oldFactor.amount } },
+            { new: true }
+          );
+        }
+      }
+    } else {
+      console.log("old custene nedd not to update");
+    }
+
+    return updateFactor;
   } catch (error) {
     Sentry.captureException(error);
     throw error;

@@ -84,7 +84,6 @@ const deleteFactor = async (i18n, id) => {
 const editFactor = async (
   i18n,
   factorId,
-  factorType,
   paymentType,
   date,
   amount,
@@ -94,23 +93,21 @@ const editFactor = async (
 ) => {
   const data = {
     factorId,
-    factorType,
     paymentType,
     date,
-    amount,
+    // amount,
     description,
     customer,
     items,
   };
   const schema = Joi.object({
     factorId: Joi.string().required(),
-    factorType: Joi.valid(FactorTypeEnum.BUY, FactorTypeEnum.SELL).required(),
     paymentType: Joi.valid(
       PaymentTypeEnum.CASH,
       PaymentTypeEnum.NO_CASH
     ).required(),
     date: Joi.string().required(),
-    amount: Joi.number().integer().required(),
+    // amount: Joi.number().integer().required(),
     description: Joi.string(),
     customer: Joi.string().required(),
     items: Joi.array().required(),
@@ -123,7 +120,6 @@ const editFactor = async (
     return await Factor.editFactor(
       i18n,
       factorId,
-      factorType,
       paymentType,
       date,
       amount,

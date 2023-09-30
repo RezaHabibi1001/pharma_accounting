@@ -338,13 +338,11 @@ const typeDefs = gql`
       items: [FactorItemInput]
     ): Factor
     editFactor(
-      factorId: ID!
-      factorType: FactorTypeEnum!
-      paymentType: PaymentTypeEnum!
-      date: String!
-      amount: Int!
+      factorId: ID
+      paymentType: PaymentTypeEnum
+      date: String
       description: String
-      customer: ID!
+      customer: ID
       items: [FactorItemInput]
     ): Factor
     deleteFactor(id: ID!): Message

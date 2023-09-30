@@ -54,7 +54,6 @@ module.exports = {
       const { i18n } = req;
       const {
         factorId,
-        factorType,
         paymentType,
         date,
         amount,
@@ -65,7 +64,6 @@ module.exports = {
       return FactorService.editFactor(
         i18n,
         factorId,
-        factorType,
         paymentType,
         date,
         amount,
