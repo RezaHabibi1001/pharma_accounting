@@ -119,9 +119,9 @@ const typeDefs = gql`
     buyFactorNumber: Int
     sellFactorNumber: Int
     drug: Drug
-    quantity: Int!
-    price: Int!
-    total: Int!
+    quantity: Int
+    price: Int
+    total: Int
     description: String
   }
   type Factor {

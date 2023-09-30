@@ -179,42 +179,15 @@ const getLastFactor = async factorType => {
     {
       $lookup: {
         from: "drugs",
-        localField: "items",
+        localField: "items.drug",
         foreignField: "_id",
-        pipeline: [
-          {
-            $lookup: {
-              from: "drugs",
-              localField: "drug",
-              foreignField: "_id",
-              pipeline: [
-                {
-                  $project: {
-                    _id: 0,
-                    name: 1,
-                    company: 1,
-                    country: 1,
-                    price: 1,
-                    amount: 1,
-                  },
-                },
-              ],
-              as: "drug",
-            },
-          },
-          {
-            $unwind: "$drug",
-          },
-          {
-            $project: {
-              quantity: 1,
-              price: 1,
-              total: 1,
-              drug: "$drug",
-            },
-          },
-        ],
-        as: "items",
+        as: "drug",
+      },
+    },
+    {
+      $unwind: {
+        path: "$drug",
+        preserveNullAndEmptyArrays: true,
       },
     },
     {
@@ -227,7 +200,11 @@ const getLastFactor = async factorType => {
         amount: 1,
         description: 1,
         customer: "$customer",
-        items: "$items",
+        "items.quantity": 1,
+        "items.price": 1,
+        "items.total": 1,
+        "items.description": 1,
+        "items.drug": "$drug",
       },
     },
   ];
