@@ -198,10 +198,38 @@ const reportChecks = async (
     throw error;
   }
 };
+const getLastCheck = async () => {
+  const pipline = [
+    { $sort: { createdAt: -1 } },
+    { $limit: 1 },
+    {
+      $lookup: {
+        from: "customers",
+        localField: "customer",
+        foreignField: "_id",
+        as: "customer",
+      },
+    },
+    {
+      $unwind: {
+        path: "$customer",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+  ];
+  try {
+    let checks = await Check.aggregate(pipline);
+    return checks[0];
+  } catch (error) {
+    Sentry.captureException(error);
+    throw error;
+  }
+};
 module.exports = {
   getChecks,
   addCheck,
   deleteCheck,
   editCheck,
   reportChecks,
+  getLastCheck
 };

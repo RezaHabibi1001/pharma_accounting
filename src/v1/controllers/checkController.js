@@ -80,4 +80,13 @@ module.exports = {
       throw error;
     }
   },
+  async getLastCheck(parent, args, context, info) {
+    try {
+      const { req } = context;
+      const { i18n, userId } = req;
+      return CheckService.getLastCheck();
+    } catch (error) {
+      throw error;
+    }
+  },
 };
