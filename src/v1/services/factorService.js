@@ -40,7 +40,7 @@ const addFactor = async (
     ).required(),
     date: Joi.string().required(),
     amount: Joi.number().integer().required(),
-    description: Joi.string(),
+    description: Joi.string().min(0),
     customer: Joi.string().required(),
     items: Joi.array().required(),
   });

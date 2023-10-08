@@ -146,6 +146,20 @@ const changeExistance = async (items, factorType) => {
     throw error;
   }
 };
+const changePrice = async (items) => {
+  try {
+      items.map(async item => {
+        await Drug.findOneAndUpdate(
+          { _id: item.drug },
+          { $set: { price: item.price } },
+          { new: true }
+        );
+      });
+  } catch (error) {
+    Sentry.captureException(error);
+    throw error;
+  }
+};
 const rollbackDrug = async (items, factorType) => {
   try {
     if (factorType == FactorTypeEnum.SELL) {
@@ -273,4 +287,5 @@ module.exports = {
   changeExistance,
   reportDrugs,
   rollbackDrug,
+  changePrice
 };

@@ -2,7 +2,7 @@ const Factor = require("../models/factor");
 const Customer = require("../models/customer");
 const Roznamcha = require("../models/roznamcha");
 const { addRoznamcha } = require("./roznamcha");
-const { changeExistance, rollbackDrug } = require("./drug");
+const { changeExistance, rollbackDrug , changePrice} = require("./drug");
 const Sentry = require("../../log");
 const { ObjectId } = require("mongoose").Types;
 const { FactorTypeEnum, PaymentTypeEnum } = require("../utils/enum");
@@ -75,7 +75,9 @@ const addFactor = async (
     let bellType = factorType;
     await addRoznamcha(bellNumber, bellType, date, amount, customer);
     await changeExistance(items, factorType);
-
+    if (factorType == "Buy") {
+      await changePrice(items);
+    }
     return savedFactor;
   } catch (error) {
     Sentry.captureException(error);
