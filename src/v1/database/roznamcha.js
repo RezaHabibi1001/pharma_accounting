@@ -1,6 +1,11 @@
 const Roznamcha = require("../models/roznamcha");
 const Factor = require("../models/factor");
 const Check = require("../models/check");
+const Customer = require("../models/customer");
+const Drug = require("../models/drug");
+const Stack = require("../models/stack");
+const User = require("../models/user");
+
 const Sentry = require("../../log");
 
 const addRoznamcha = async (bellNumber, bellType, date, amount, customer) => {
@@ -48,7 +53,6 @@ const getRepository = async date => {
   try {
 
     const factors =  await Factor.aggregate([
-      {$match:{paymentType:"No_Cash"}},
       {
         $group: {
           _id: null,
@@ -79,6 +83,7 @@ const getRepository = async date => {
         }
       }
     ])
+    console.log("factors" ,factors);
     const checks =  await Check.aggregate([
       {
         $group: {
@@ -110,10 +115,28 @@ const getRepository = async date => {
         }
       }
     ])
-    return factors[0]?.totalFactors-checks[0]?.totalCheck;
+    console.log("checks"  , checks);
+    return factors[0]?.totalFactors|| 0 +checks[0]?.totalCheck || 0;
   } catch (error) {
     Sentry.captureException(error);
     throw error;
   }
 };
-module.exports = { addRoznamcha, getRoznamcha   , getRepository};
+const getStatistic = async date => {
+  try {
+    let data = {
+      userCount:await User.count(),
+      stackCount:await Stack.count(),
+      drugCount:await Drug.count(),
+      customerCount:await Customer.count(),
+      checkCount:await Check.count(),
+      factorCount:await Factor.count(),
+    }
+    console.log("this is get statistic " , data);
+    return data
+  } catch (error) {
+    Sentry.captureException(error);
+    throw error;
+  }
+};
+module.exports = { addRoznamcha, getRoznamcha   , getRepository ,  getStatistic};

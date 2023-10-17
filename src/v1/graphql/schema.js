@@ -156,7 +156,14 @@ const typeDefs = gql`
     customer: Customer
     createdAt: DateTime
   }
-
+  type Statistic {
+    userCount:Int,
+    stackCount:Int,
+    drugCount:Int,
+    customerCount:Int,
+    checkCount:Int,
+    factorCount:Int
+  }
   type Query {
     getUsers: [User]
     getDrugTypes: [DrugType]
@@ -210,6 +217,7 @@ const typeDefs = gql`
       endAmount: Int
     ): [Factor]
     getRepository:Int
+    getStatistic:Statistic
   }
   type Mutation {
     addUser(

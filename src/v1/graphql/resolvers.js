@@ -59,7 +59,7 @@ const {
   getLastFactor,
   reportFactors,
 } = require("../controllers/factorController");
-const { getRoznamcha  , getRepository } = require("../controllers/roznamchaController");
+const { getRoznamcha  , getRepository ,  getStatistic } = require("../controllers/roznamchaController");
 
 const resolvers = {
   Mutation: {
@@ -109,7 +109,8 @@ const resolvers = {
     reportChecks,
     reportFactors,
     getRepository,
-    getLastCheck
+    getLastCheck,
+    getStatistic
   },
 };
 

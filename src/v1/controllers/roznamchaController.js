@@ -20,4 +20,13 @@ module.exports = {
       throw error;
     }
   },
+  async getStatistic(parent, args, context, info) {
+    try {
+      const { req } = context;
+      const { i18n, userId } = req;
+      return RoznamchaService.getStatistic();
+    } catch (error) {
+      throw error;
+    }
+  },
 };
