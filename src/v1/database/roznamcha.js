@@ -54,6 +54,9 @@ const getRepository = async date => {
 
     const factors =  await Factor.aggregate([
       {
+        $match:{paymentType:"Cash"}
+      },
+      {
         $group: {
           _id: null,
           sellAmount: {
@@ -83,7 +86,6 @@ const getRepository = async date => {
         }
       }
     ])
-    console.log("factors" ,factors);
     const checks =  await Check.aggregate([
       {
         $group: {
@@ -115,8 +117,19 @@ const getRepository = async date => {
         }
       }
     ])
-    console.log("checks"  , checks);
-    return factors[0]?.totalFactors|| 0 +checks[0]?.totalCheck || 0;
+    let factorsDifference;
+    let checkDifference;
+    if(factors.length == 0) {
+      factorsDifference = 0
+    }else {
+      factorsDifference = factors[0].totalFactors
+    }
+    if(checks.length == 0) {
+      checkDifference = 0
+    }else {
+      checkDifference = checks[0].totalCheck
+    }
+    return factorsDifference+checkDifference
   } catch (error) {
     Sentry.captureException(error);
     throw error;
