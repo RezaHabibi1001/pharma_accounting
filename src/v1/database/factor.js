@@ -90,7 +90,9 @@ const addFactor = async (
         ? savedFactor.buyFactorNumber
         : savedFactor.sellFactorNumber;
     let bellType = factorType;
-    await addRoznamcha(bellNumber, bellType, date, amount, customer);
+    if(paymentType == PaymentTypeEnum.CASH) {
+      await addRoznamcha(bellNumber, bellType, date, amount, customer);
+    }
     await changeExistance(items, factorType);
     if (factorType == "Buy") {
       await changePrice(items);
