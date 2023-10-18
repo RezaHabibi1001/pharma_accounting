@@ -1,6 +1,10 @@
 const Customer = require("../models/customer");
+const Factor = require("../models/factor");
+const Check = require("../models/check");
 const Sentry = require("../../log");
 const { BalanceStatus } = require("../utils/enum");
+const { ObjectId } = require("mongoose").Types;
+
 const getCustomers = async () => {
   try {
     return await Customer.find();
@@ -41,6 +45,15 @@ const addCustomer = async (
 };
 const deleteCustomer = async (i18n, id) => {
   try {
+    const factorExistWithCustomer = await Factor.findOne({customer: ObjectId(id)});
+    if (factorExistWithCustomer) {
+      return { message: i18n.__("delete_factor_before_delete_customer") };
+    }
+    const checkExistWithCustomer = await Check.findOne({customer: ObjectId(id)});
+    if (checkExistWithCustomer) {
+      return { message: i18n.__("delete_check_before_delete_customer") };
+    }
+    
     const isDeletedCustomer = await Customer.findByIdAndRemove(id);
     if (isDeletedCustomer) {
       return { message: i18n.__("customer_deleted_successfully") };

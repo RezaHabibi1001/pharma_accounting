@@ -24,5 +24,8 @@
 	"delete_drugs_before_delete_drugType": "please delete related drugs before delete drugType",
 	"delete_drugs_before_delete_stack": "please delete related drugs before delete Stack",
 	"failed_to_delete_factor": "Failed to delete factor",
-	"delete_factor_before_delete_drug": "please delete factor before delete drug "
+	"delete_factor_before_delete_drug": "please delete related factor before delete drug ",
+	"delete_factor_before_delete_customer":"please delete related factore befor delete customer ",
+	"delete_check_before_delete_customer":"please delete related check befor delete customer "
+
 }
