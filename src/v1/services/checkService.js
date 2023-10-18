@@ -135,9 +135,9 @@ const reportChecks = async (
     throw error;
   }
 };
-const getLastCheck = async () => {
+const getLastCheck = async (checkType) => {
   try {
-    return await Check.getLastCheck();
+    return await Check.getLastCheck(checkType);
   } catch (error) {
     Sentry.captureException(error);
     throw error;

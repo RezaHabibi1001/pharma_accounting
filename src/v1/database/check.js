@@ -214,8 +214,9 @@ const reportChecks = async (
     throw error;
   }
 };
-const getLastCheck = async () => {
+const getLastCheck = async (checkType) => {
   const pipline = [
+    {$match:{checkType}},
     { $sort: { createdAt: -1 } },
     { $limit: 1 },
     {

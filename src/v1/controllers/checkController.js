@@ -84,7 +84,8 @@ module.exports = {
     try {
       const { req } = context;
       const { i18n, userId } = req;
-      return CheckService.getLastCheck();
+      const {checkType} =  args
+      return CheckService.getLastCheck(checkType);
     } catch (error) {
       throw error;
     }
