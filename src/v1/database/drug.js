@@ -230,10 +230,10 @@ const reportDrugs = async (
   if (startDate || endDate) {
     if (startDate && endDate) {
       filters.push({
-        expDate: { $gte: new Date(startDate), $lte: new Date(endDate) },
+        expDate: { $gte: startDate, $lte:endDate },
       });
     } else if (startDate) {
-      filters.push({ expDate: { $gte: startDate } });
+      filters.push({ expDate: { $gte:startDate } });
     } else if (endDate) {
       filters.push({ expDate: { $lte: endDate } });
     }
