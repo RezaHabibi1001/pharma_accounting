@@ -66,7 +66,7 @@ const addCheck = async (
     const newCheck = new Check(providedData);
     let savedCheck = await newCheck.save();
     if (savedCheck) {
-      let operator = checkType == "Check_In" ? "-" : "+";
+      let operator = checkType == "Check_In" ? "+" : "-";
       await Customer.findOneAndUpdate(
         { _id: ObjectId(customer) },
         { $inc: { balance: operator + amount } },
@@ -142,7 +142,7 @@ const editCheck = async (
     if (oldCheck.checkType == CheckTypeEnum.CHECK_OUT) {
       const updatedCustomer = await Customer.findOneAndUpdate(
         { _id: customer },
-        { balance: balance - oldCheck.amount+amount }
+        { balance: balance + oldCheck.amount-amount }
       );
       const isUpdatedRoznamcha = await Roznamcha.findOneAndUpdate({
         bellType: CheckTypeEnum.CHECK_OUT,
@@ -156,7 +156,7 @@ const editCheck = async (
     if (checkType == CheckTypeEnum.CHECK_IN) {
       const updatedCustomer = await Customer.findOneAndUpdate(
         { _id: customer },
-        { balance: balance + oldCheck.amount-amount }
+        { balance: balance - oldCheck.amount+amount }
       );
       const isUpdatedRoznamcha = await Roznamcha.findOneAndUpdate({
         bellType: CheckTypeEnum.CHECK_IN,
