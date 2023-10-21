@@ -167,12 +167,22 @@ const editCheck = async (
     }
   }
   if(oldCheck.date != date) {
+   if(checkType == CheckTypeEnum.CHECK_IN) {
     const isUpdatedRoznamcha = await Roznamcha.findOneAndUpdate({
       bellType: CheckTypeEnum.CHECK_IN,
       bellNumber: oldCheck.checkInNumber,
     },
     {date}
     );
+   }
+   if(checkType == CheckTypeEnum.CHECK_OUT) {
+    const isUpdatedRoznamcha = await Roznamcha.findOneAndUpdate({
+      bellType: CheckTypeEnum.CHECK_OUT,
+      bellNumber: oldCheck.checkOutNumber,
+    },
+    {date}
+    );
+   }
   }
 
     return await Check.findOneAndUpdate(
