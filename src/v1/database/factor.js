@@ -254,6 +254,39 @@ const getLastFactor = async factorType => {
         from: "drugs",
         localField: "items.drug",
         foreignField: "_id",
+        pipeline: [
+          {
+            $lookup: {
+              from: "drugtypes",
+              localField: "drugType",
+              foreignField: "_id",
+              pipeline: [
+                {
+                  $project: {
+                    _id: 1,
+                    title: 1,
+                  },
+                },
+              ],
+              as: "drugType",
+            },
+          },
+          {
+            $unwind: {
+              path: "$drugType",
+              preserveNullAndEmptyArrays: true,
+            },
+          },
+          {
+            $project: {
+              _id: 1,
+              name:1,
+              price:1,
+              amount:1,
+              drugType: "$drugType",
+            },
+          },
+        ],
         as: "drug",
       },
     },
@@ -278,6 +311,8 @@ const getLastFactor = async factorType => {
         "items.total": 1,
         "items.description": 1,
         "items.drug": "$drug",
+        "item.drug.drugType":"$drug.drugType"
+
       },
     },
   ];
@@ -311,6 +346,39 @@ const getFactor = async (id) => {
         from: "drugs",
         localField: "items.drug",
         foreignField: "_id",
+        pipeline: [
+          {
+            $lookup: {
+              from: "drugtypes",
+              localField: "drugType",
+              foreignField: "_id",
+              pipeline: [
+                {
+                  $project: {
+                    _id: 1,
+                    title: 1,
+                  },
+                },
+              ],
+              as: "drugType",
+            },
+          },
+          {
+            $unwind: {
+              path: "$drugType",
+              preserveNullAndEmptyArrays: true,
+            },
+          },
+          {
+            $project: {
+              _id: 1,
+              name:1,
+              price:1,
+              amount:1,
+              drugType: "$drugType",
+            },
+          },
+        ],
         as: "drug",
       },
     },
@@ -335,6 +403,9 @@ const getFactor = async (id) => {
         "items.total": 1,
         "items.description": 1,
         "items.drug": "$drug",
+        "item.drug.drugType":"$drug.drugType"
+
+
       },
     },
   ];
