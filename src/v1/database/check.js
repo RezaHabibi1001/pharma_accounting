@@ -93,7 +93,7 @@ const deleteCheck = async (i18n, id) => {
     if (checkType == CheckTypeEnum.CHECK_OUT) {
       const updatedCustomer = await Customer.findOneAndUpdate(
         { _id: customer },
-        { balance: balance - amount }
+        { balance: balance + amount }
       );
       const isDeletedRoznamcha = await Roznamcha.findOneAndRemove({
         bellType: CheckTypeEnum.CHECK_OUT,
@@ -107,7 +107,7 @@ const deleteCheck = async (i18n, id) => {
     if (checkType == CheckTypeEnum.CHECK_IN) {
       const updatedCustomer = await Customer.findOneAndUpdate(
         { _id: customer },
-        { balance: balance + amount }
+        { balance: balance - amount }
       );
       const isDeletedRoznamcha = await Roznamcha.findOneAndRemove({
         bellType: CheckTypeEnum.CHECK_IN,
