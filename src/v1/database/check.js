@@ -136,6 +136,45 @@ const editCheck = async (
   customer
 ) => {
   try {
+    const oldCheck =  await Check.findById(checkId)
+    const {balance} =  await Customer.findById(customer)
+  if(oldCheck.amount != amount){
+    if (oldCheck.checkType == CheckTypeEnum.CHECK_OUT) {
+      const updatedCustomer = await Customer.findOneAndUpdate(
+        { _id: customer },
+        { balance: balance - oldCheck.amount+amount }
+      );
+      const isUpdatedRoznamcha = await Roznamcha.findOneAndUpdate({
+        bellType: CheckTypeEnum.CHECK_OUT,
+        bellNumber: oldCheck.checkOutNumber,
+      },
+      {
+        amount
+      }
+      );
+    }
+    if (checkType == CheckTypeEnum.CHECK_IN) {
+      const updatedCustomer = await Customer.findOneAndUpdate(
+        { _id: customer },
+        { balance: balance + oldCheck.amount-amount }
+      );
+      const isUpdatedRoznamcha = await Roznamcha.findOneAndUpdate({
+        bellType: CheckTypeEnum.CHECK_IN,
+        bellNumber: oldCheck.checkInNumber,
+      },
+      {amount}
+      );
+    }
+  }
+  if(oldCheck.date != date) {
+    const isUpdatedRoznamcha = await Roznamcha.findOneAndUpdate({
+      bellType: CheckTypeEnum.CHECK_IN,
+      bellNumber: oldCheck.checkInNumber,
+    },
+    {date}
+    );
+  }
+
     return await Check.findOneAndUpdate(
       { _id: checkId },
       {
