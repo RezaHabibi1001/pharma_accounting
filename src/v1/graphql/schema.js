@@ -176,7 +176,7 @@ const typeDefs = gql`
     getFactors: [Factor]
     getRoznamcha(date: DateTime): [Roznamcha]
     getLastFactor(factorType: FactorTypeEnum!): LastFactor
-    getFactor(id:ID): LastFactor
+    getFactor(id:ID!): LastFactor
     getLastCheck(checkType:CheckTypeEnum!):Check
     reportDrugs(
       drugType: ID
@@ -219,6 +219,7 @@ const typeDefs = gql`
     ): [Factor]
     getRepository:Int
     getStatistic:Statistic
+    getCheck(id:ID!):Check
   }
   type Mutation {
     addUser(

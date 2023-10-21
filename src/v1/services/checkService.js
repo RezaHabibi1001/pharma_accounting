@@ -143,11 +143,20 @@ const getLastCheck = async (checkType) => {
     throw error;
   }
 };
+const getCheck = async (id) => {
+  try {
+    return await Check.getCheck(id);
+  } catch (error) {
+    Sentry.captureException(error);
+    throw error;
+  }
+};
 module.exports = {
   getChecks,
   addCheck,
   deleteCheck,
   editCheck,
   reportChecks,
-  getLastCheck
+  getLastCheck,
+  getCheck
 };

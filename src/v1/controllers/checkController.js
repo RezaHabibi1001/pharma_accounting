@@ -90,4 +90,14 @@ module.exports = {
       throw error;
     }
   },
+  async getCheck(parent, args, context, info) {
+    try {
+      const { req } = context;
+      const { i18n, userId } = req;
+      const {id} =  args
+      return CheckService.getCheck(id);
+    } catch (error) {
+      throw error;
+    }
+  },
 };

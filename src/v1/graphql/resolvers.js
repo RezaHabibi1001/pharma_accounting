@@ -45,6 +45,7 @@ const {
 } = require("../controllers/drugController");
 const {
   getChecks,
+  getCheck,
   addCheck,
   deleteCheck,
   editCheck,
@@ -102,6 +103,7 @@ const resolvers = {
     getCustomers,
     getDrugs,
     getChecks,
+    getCheck,
     getFactors,
     getFactor,
     getRoznamcha,

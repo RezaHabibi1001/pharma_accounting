@@ -281,11 +281,38 @@ const getLastCheck = async (checkType) => {
     throw error;
   }
 };
+const getCheck = async (id) => {
+  const pipline = [
+    {$match:{_id:ObjectId(id)}},
+    {
+      $lookup: {
+        from: "customers",
+        localField: "customer",
+        foreignField: "_id",
+        as: "customer",
+      },
+    },
+    {
+      $unwind: {
+        path: "$customer",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+  ];
+  try {
+    let checks = await Check.aggregate(pipline);
+    return checks[0];
+  } catch (error) {
+    Sentry.captureException(error);
+    throw error;
+  }
+};
 module.exports = {
   getChecks,
   addCheck,
   deleteCheck,
   editCheck,
   reportChecks,
-  getLastCheck
+  getLastCheck,
+  getCheck
 };
