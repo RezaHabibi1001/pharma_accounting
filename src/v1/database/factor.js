@@ -289,6 +289,63 @@ const getLastFactor = async factorType => {
     throw error;
   }
 };
+const getFactor = async (id) => {
+  const pipline = [
+    { $match: { _id:ObjectId(id) } },
+    {
+      $lookup: {
+        from: "customers",
+        localField: "customer",
+        foreignField: "_id",
+        as: "customer",
+      },
+    },
+    {
+      $unwind: {
+        path: "$customer",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $lookup: {
+        from: "drugs",
+        localField: "items.drug",
+        foreignField: "_id",
+        as: "drug",
+      },
+    },
+    {
+      $unwind: {
+        path: "$drug",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $project: {
+        buyFactorNumber: 1,
+        sellFactorNumber: 1,
+        factorType: 1,
+        paymentType: 1,
+        date: 1,
+        amount: 1,
+        description: 1,
+        customer: "$customer",
+        "items.quantity": 1,
+        "items.price": 1,
+        "items.total": 1,
+        "items.description": 1,
+        "items.drug": "$drug",
+      },
+    },
+  ];
+  try {
+    let factors = await Factor.aggregate(pipline);
+    return factors[0];
+  } catch (error) {
+    Sentry.captureException(error);
+    throw error;
+  }
+};
 const reportFactors = async (
   factorType,
   paymentType,
@@ -362,4 +419,5 @@ module.exports = {
   editFactor,
   getLastFactor,
   reportFactors,
+  getFactor
 };

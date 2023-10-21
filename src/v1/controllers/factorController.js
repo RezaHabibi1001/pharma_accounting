@@ -85,6 +85,16 @@ module.exports = {
       throw error;
     }
   },
+  async getFactor(parent, args, context, info) {
+    try {
+      const { req } = context;
+      const { i18n, userId } = req;
+      const { id } = args;
+      return FactorService.getFactor(id);
+    } catch (error) {
+      throw error;
+    }
+  },
   async reportFactors(parent, args, context, info) {
     try {
       const { req } = context;

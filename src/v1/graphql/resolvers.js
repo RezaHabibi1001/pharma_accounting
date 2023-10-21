@@ -58,6 +58,7 @@ const {
   editFactor,
   getLastFactor,
   reportFactors,
+  getFactor
 } = require("../controllers/factorController");
 const { getRoznamcha  , getRepository ,  getStatistic } = require("../controllers/roznamchaController");
 
@@ -102,6 +103,7 @@ const resolvers = {
     getDrugs,
     getChecks,
     getFactors,
+    getFactor,
     getRoznamcha,
     getLastFactor,
     reportDrugs,
