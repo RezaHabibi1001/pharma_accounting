@@ -45,6 +45,7 @@ const {
 } = require("../controllers/drugController");
 const {
   getChecks,
+  getCheck,
   addCheck,
   deleteCheck,
   editCheck,
@@ -58,8 +59,9 @@ const {
   editFactor,
   getLastFactor,
   reportFactors,
+  getFactor
 } = require("../controllers/factorController");
-const { getRoznamcha  , getRepository } = require("../controllers/roznamchaController");
+const { getRoznamcha  , getRepository ,  getStatistic } = require("../controllers/roznamchaController");
 
 const resolvers = {
   Mutation: {
@@ -101,7 +103,9 @@ const resolvers = {
     getCustomers,
     getDrugs,
     getChecks,
+    getCheck,
     getFactors,
+    getFactor,
     getRoznamcha,
     getLastFactor,
     reportDrugs,
@@ -109,7 +113,8 @@ const resolvers = {
     reportChecks,
     reportFactors,
     getRepository,
-    getLastCheck
+    getLastCheck,
+    getStatistic
   },
 };
 

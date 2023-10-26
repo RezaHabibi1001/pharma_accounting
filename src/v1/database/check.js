@@ -40,17 +40,33 @@ const addCheck = async (
   customer
 ) => {
   try {
-    const newCheck = new Check({
+    let providedData = {
       checkType,
       date,
       amount,
       description,
       customer,
-    });
-
+    }
+    const lastCheck  =  await Check.find({checkType}).sort({createdAt:-1}).limit(1)
+    console.log("lastCheck" ,  lastCheck[0]);
+    if(lastCheck[0]) {
+    if(checkType == CheckTypeEnum.CHECK_IN) {
+      providedData.checkInNumber = lastCheck[0].checkInNumber+1
+    }else if(checkType == CheckTypeEnum.CHECK_OUT) {
+      providedData.checkOutNumber = lastCheck[0].checkOutNumber+1
+    }
+  }else {
+    if(checkType == CheckTypeEnum.CHECK_IN) {
+      providedData.checkInNumber = 1
+    }else if(checkType == CheckTypeEnum.CHECK_OUT) {
+      providedData.checkOutNumber = 1
+    }
+  }
+    
+    const newCheck = new Check(providedData);
     let savedCheck = await newCheck.save();
     if (savedCheck) {
-      let operator = checkType == "Check_In" ? "-" : "+";
+      let operator = checkType == "Check_In" ? "+" : "-";
       await Customer.findOneAndUpdate(
         { _id: ObjectId(customer) },
         { $inc: { balance: operator + amount } },
@@ -77,7 +93,7 @@ const deleteCheck = async (i18n, id) => {
     if (checkType == CheckTypeEnum.CHECK_OUT) {
       const updatedCustomer = await Customer.findOneAndUpdate(
         { _id: customer },
-        { balance: balance - amount }
+        { balance: balance + amount }
       );
       const isDeletedRoznamcha = await Roznamcha.findOneAndRemove({
         bellType: CheckTypeEnum.CHECK_OUT,
@@ -91,7 +107,7 @@ const deleteCheck = async (i18n, id) => {
     if (checkType == CheckTypeEnum.CHECK_IN) {
       const updatedCustomer = await Customer.findOneAndUpdate(
         { _id: customer },
-        { balance: balance + amount }
+        { balance: balance - amount }
       );
       const isDeletedRoznamcha = await Roznamcha.findOneAndRemove({
         bellType: CheckTypeEnum.CHECK_IN,
@@ -120,6 +136,55 @@ const editCheck = async (
   customer
 ) => {
   try {
+    const oldCheck =  await Check.findById(checkId)
+    const {balance} =  await Customer.findById(customer)
+  if(oldCheck.amount != amount){
+    if (oldCheck.checkType == CheckTypeEnum.CHECK_OUT) {
+      const updatedCustomer = await Customer.findOneAndUpdate(
+        { _id: customer },
+        { balance: balance + oldCheck.amount-amount }
+      );
+      const isUpdatedRoznamcha = await Roznamcha.findOneAndUpdate({
+        bellType: CheckTypeEnum.CHECK_OUT,
+        bellNumber: oldCheck.checkOutNumber,
+      },
+      {
+        amount
+      }
+      );
+    }
+    if (checkType == CheckTypeEnum.CHECK_IN) {
+      const updatedCustomer = await Customer.findOneAndUpdate(
+        { _id: customer },
+        { balance: balance - oldCheck.amount+amount }
+      );
+      const isUpdatedRoznamcha = await Roznamcha.findOneAndUpdate({
+        bellType: CheckTypeEnum.CHECK_IN,
+        bellNumber: oldCheck.checkInNumber,
+      },
+      {amount}
+      );
+    }
+  }
+  if(oldCheck.date != date) {
+   if(checkType == CheckTypeEnum.CHECK_IN) {
+    const isUpdatedRoznamcha = await Roznamcha.findOneAndUpdate({
+      bellType: CheckTypeEnum.CHECK_IN,
+      bellNumber: oldCheck.checkInNumber,
+    },
+    {date}
+    );
+   }
+   if(checkType == CheckTypeEnum.CHECK_OUT) {
+    const isUpdatedRoznamcha = await Roznamcha.findOneAndUpdate({
+      bellType: CheckTypeEnum.CHECK_OUT,
+      bellNumber: oldCheck.checkOutNumber,
+    },
+    {date}
+    );
+   }
+  }
+
     return await Check.findOneAndUpdate(
       { _id: checkId },
       {
@@ -198,10 +263,37 @@ const reportChecks = async (
     throw error;
   }
 };
-const getLastCheck = async () => {
+const getLastCheck = async (checkType) => {
   const pipline = [
+    {$match:{checkType}},
     { $sort: { createdAt: -1 } },
     { $limit: 1 },
+    {
+      $lookup: {
+        from: "customers",
+        localField: "customer",
+        foreignField: "_id",
+        as: "customer",
+      },
+    },
+    {
+      $unwind: {
+        path: "$customer",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+  ];
+  try {
+    let checks = await Check.aggregate(pipline);
+    return checks[0];
+  } catch (error) {
+    Sentry.captureException(error);
+    throw error;
+  }
+};
+const getCheck = async (id) => {
+  const pipline = [
+    {$match:{_id:ObjectId(id)}},
     {
       $lookup: {
         from: "customers",
@@ -231,5 +323,6 @@ module.exports = {
   deleteCheck,
   editCheck,
   reportChecks,
-  getLastCheck
+  getLastCheck,
+  getCheck
 };

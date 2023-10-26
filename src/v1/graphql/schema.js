@@ -110,7 +110,7 @@ const typeDefs = gql`
 
   input FactorItemInput {
     drug: ID!
-    quantity: Int!
+    quantity: Float!
     price: Int!
     total: Int!
     description: String
@@ -119,7 +119,7 @@ const typeDefs = gql`
     buyFactorNumber: Int
     sellFactorNumber: Int
     drug: Drug
-    quantity: Int
+    quantity: Float
     price: Int
     total: Int
     description: String
@@ -156,7 +156,14 @@ const typeDefs = gql`
     customer: Customer
     createdAt: DateTime
   }
-
+  type Statistic {
+    userCount:Int,
+    stackCount:Int,
+    drugCount:Int,
+    customerCount:Int,
+    checkCount:Int,
+    factorCount:Int
+  }
   type Query {
     getUsers: [User]
     getDrugTypes: [DrugType]
@@ -169,7 +176,8 @@ const typeDefs = gql`
     getFactors: [Factor]
     getRoznamcha(date: DateTime): [Roznamcha]
     getLastFactor(factorType: FactorTypeEnum!): LastFactor
-    getLastCheck:Check
+    getFactor(id:ID!): LastFactor
+    getLastCheck(checkType:CheckTypeEnum!):Check
     reportDrugs(
       drugType: ID
       drugName: String
@@ -210,6 +218,8 @@ const typeDefs = gql`
       endAmount: Int
     ): [Factor]
     getRepository:Int
+    getStatistic:Statistic
+    getCheck(id:ID!):Check
   }
   type Mutation {
     addUser(

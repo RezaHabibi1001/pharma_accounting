@@ -27,7 +27,17 @@ const getRepository = async date => {
     throw error;
   }
 };
+const getStatistic = async date => {
+  const data = { date };
+  try {
+    return await Roznamcha.getStatistic();
+  } catch (error) {
+    Sentry.captureException(error);
+    throw error;
+  }
+};
 module.exports = {
   getRoznamcha,
-  getRepository
+  getRepository,
+  getStatistic
 };

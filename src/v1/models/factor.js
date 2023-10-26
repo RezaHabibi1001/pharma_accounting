@@ -59,28 +59,4 @@ const factorModel = new Schema(
   { timestamps: true }
 );
 
-factorModel.plugin(autoIncrement.plugin, {
-  model: "Factor",
-  field: "buyFactorNumber",
-  startAt: 1,
-  incrementBy: 1,
-});
-factorModel.plugin(autoIncrement.plugin, {
-  model: "Factor",
-  field: "sellFactorNumber",
-  startAt: 1,
-  incrementBy: 1,
-});
-factorModel.pre("save", function (next) {
-  if (this.factorType === "Buy") {
-    this.Buy = this.Buy || 0;
-    next();
-  } else if (this.factorType === "Sell") {
-    this.Sell = this.Sell || 0;
-    next();
-  } else {
-    next();
-  }
-});
-
 module.exports = mongoose.model("Factor", factorModel);

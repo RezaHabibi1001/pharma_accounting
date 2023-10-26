@@ -38,7 +38,7 @@ const addRemittance = async (
     customerName: Joi.string().required(),
     shopAddress: Joi.string().required(),
     via: Joi.string().required(),
-    description: Joi.string(),
+    description: Joi.string().min(0),
     date: Joi.string().required(),
     type: Joi.valid(RemittanceEnum.CARD_TO_CARD, RemittanceEnum.EXCHANGE),
   });
@@ -109,7 +109,7 @@ const editRemittance = async (
     customerName: Joi.string(),
     shopAddress: Joi.string(),
     via: Joi.string(),
-    description: Joi.string(),
+    description: Joi.string().min(0),
     date: Joi.string(),
     type: Joi.valid(RemittanceEnum.CARD_TO_CARD, RemittanceEnum.EXCHANGE),
   });

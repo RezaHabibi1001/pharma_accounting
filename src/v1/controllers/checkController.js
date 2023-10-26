@@ -84,7 +84,18 @@ module.exports = {
     try {
       const { req } = context;
       const { i18n, userId } = req;
-      return CheckService.getLastCheck();
+      const {checkType} =  args
+      return CheckService.getLastCheck(checkType);
+    } catch (error) {
+      throw error;
+    }
+  },
+  async getCheck(parent, args, context, info) {
+    try {
+      const { req } = context;
+      const { i18n, userId } = req;
+      const {id} =  args
+      return CheckService.getCheck(id);
     } catch (error) {
       throw error;
     }

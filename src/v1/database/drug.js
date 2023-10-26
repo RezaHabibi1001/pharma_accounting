@@ -205,35 +205,35 @@ const reportDrugs = async (
   drugCountry && filters.push({ country: drugCountry });
   drugStack && filters.push({ stack: ObjectId(drugStack) });
 
-  if (startAmount || endAmount) {
-    if (startAmount && endAmount) {
+  if  ( typeof startAmount === "number" || typeof endAmount === "number") {
+    if ( typeof startAmount === "number" && typeof endAmount === "number") {
       filters.push({
         amount: { $gte: startAmount, $lte: endAmount },
       });
-    } else if (startDate) {
+    } else if ( typeof startAmount === "number") {
       filters.push({ amount: { $gte: startAmount } });
-    } else if (endDate) {
+    } else if (typeof endAmount === "number") {
       filters.push({ amount: { $lte: endAmount } });
     }
   }
-  if (startPrice || endPrice) {
-    if (startPrice && endPrice) {
+  if ( typeof startPrice === "number" ||  typeof endPrice === "number") {
+    if ( typeof startPrice === "number" &&  typeof endPrice === "number") {
       filters.push({
         price: { $gte: startPrice, $lte: endPrice },
       });
-    } else if (startPrice) {
+    } else if ( typeof startPrice === "number" ) {
       filters.push({ price: { $gte: startPrice } });
-    } else if (endPrice) {
+    } else if ( typeof endPrice === "number" ) {
       filters.push({ price: { $lte: endPrice } });
     }
   }
   if (startDate || endDate) {
     if (startDate && endDate) {
       filters.push({
-        expDate: { $gte: new Date(startDate), $lte: new Date(endDate) },
+        expDate: { $gte: startDate, $lte:endDate },
       });
     } else if (startDate) {
-      filters.push({ expDate: { $gte: startDate } });
+      filters.push({ expDate: { $gte:startDate } });
     } else if (endDate) {
       filters.push({ expDate: { $lte: endDate } });
     }

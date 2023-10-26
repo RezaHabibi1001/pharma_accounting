@@ -42,7 +42,7 @@ const addFactor = async (
   items
 ) => {
   try {
-    const newFactor = new Factor({
+    let providedData = {
       factorType,
       paymentType,
       date,
@@ -50,7 +50,24 @@ const addFactor = async (
       description,
       customer,
       items,
-    });
+    }
+    const lastFactor  =  await Factor.find({factorType}).sort({createdAt:-1}).limit(1)
+    console.log("lastFactor" ,  lastFactor[0]);
+    if(lastFactor[0]) {
+    if(factorType == FactorTypeEnum.BUY) {
+      providedData.buyFactorNumber = lastFactor[0].buyFactorNumber+1
+    }else if(factorType == FactorTypeEnum.SELL) {
+      providedData.sellFactorNumber = lastFactor[0].sellFactorNumber+1
+    }
+  }else {
+    if(factorType == FactorTypeEnum.BUY) {
+      providedData.buyFactorNumber = 1
+    }else if(factorType == FactorTypeEnum.SELL) {
+      providedData.sellFactorNumber = 1
+    }
+  }
+    
+    const newFactor = new Factor(providedData);
 
     let operator;
     if (paymentType == "No_Cash") {
@@ -73,7 +90,9 @@ const addFactor = async (
         ? savedFactor.buyFactorNumber
         : savedFactor.sellFactorNumber;
     let bellType = factorType;
-    await addRoznamcha(bellNumber, bellType, date, amount, customer);
+    if(paymentType == PaymentTypeEnum.CASH) {
+      await addRoznamcha(bellNumber, bellType, date, amount, customer);
+    }
     await changeExistance(items, factorType);
     if (factorType == "Buy") {
       await changePrice(items);
@@ -235,6 +254,40 @@ const getLastFactor = async factorType => {
         from: "drugs",
         localField: "items.drug",
         foreignField: "_id",
+        pipeline: [
+          {
+            $lookup: {
+              from: "drugtypes",
+              localField: "drugType",
+              foreignField: "_id",
+              pipeline: [
+                {
+                  $project: {
+                    _id: 1,
+                    title: 1,
+                  },
+                },
+              ],
+              as: "drugType",
+            },
+          },
+          {
+            $unwind: {
+              path: "$drugType",
+              preserveNullAndEmptyArrays: true,
+            },
+          },
+          {
+            $project: {
+              _id: 1,
+              name:1,
+              price:1,
+              amount:1,
+              company:1,
+              drugType: "$drugType",
+            },
+          },
+        ],
         as: "drug",
       },
     },
@@ -259,6 +312,102 @@ const getLastFactor = async factorType => {
         "items.total": 1,
         "items.description": 1,
         "items.drug": "$drug",
+        "item.drug.drugType":"$drug.drugType"
+
+      },
+    },
+  ];
+  try {
+    let factors = await Factor.aggregate(pipline);
+    return factors[0];
+  } catch (error) {
+    Sentry.captureException(error);
+    throw error;
+  }
+};
+const getFactor = async (id) => {
+  const pipline = [
+    { $match: { _id:ObjectId(id) } },
+    {
+      $lookup: {
+        from: "customers",
+        localField: "customer",
+        foreignField: "_id",
+        as: "customer",
+      },
+    },
+    {
+      $unwind: {
+        path: "$customer",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $lookup: {
+        from: "drugs",
+        localField: "items.drug",
+        foreignField: "_id",
+        pipeline: [
+          {
+            $lookup: {
+              from: "drugtypes",
+              localField: "drugType",
+              foreignField: "_id",
+              pipeline: [
+                {
+                  $project: {
+                    _id: 1,
+                    title: 1,
+                  },
+                },
+              ],
+              as: "drugType",
+            },
+          },
+          {
+            $unwind: {
+              path: "$drugType",
+              preserveNullAndEmptyArrays: true,
+            },
+          },
+          {
+            $project: {
+              _id: 1,
+              name:1,
+              price:1,
+              amount:1,
+              company:1,
+              drugType: "$drugType",
+            },
+          },
+        ],
+        as: "drug",
+      },
+    },
+    {
+      $unwind: {
+        path: "$drug",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $project: {
+        buyFactorNumber: 1,
+        sellFactorNumber: 1,
+        factorType: 1,
+        paymentType: 1,
+        date: 1,
+        amount: 1,
+        description: 1,
+        customer: "$customer",
+        "items.quantity": 1,
+        "items.price": 1,
+        "items.total": 1,
+        "items.description": 1,
+        "items.drug": "$drug",
+        "item.drug.drugType":"$drug.drugType"
+
+
       },
     },
   ];
@@ -343,4 +492,5 @@ module.exports = {
   editFactor,
   getLastFactor,
   reportFactors,
+  getFactor
 };

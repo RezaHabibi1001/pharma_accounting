@@ -28,7 +28,7 @@ const addCheck = async (
     ).required(),
     date: Joi.string().required(),
     amount: Joi.number().integer().required(),
-    description: Joi.string(),
+    description: Joi.string().min(0),
     customer: Joi.string().required(),
   });
   const { error, value } = schema.validate(data);
@@ -90,7 +90,7 @@ const editCheck = async (
     ).required(),
     date: Joi.string().required(),
     amount: Joi.number().integer().required(),
-    description: Joi.string(),
+    description: Joi.string().min(0),
     customer: Joi.string().required(),
   });
   const { error, value } = schema.validate(data);
@@ -135,9 +135,17 @@ const reportChecks = async (
     throw error;
   }
 };
-const getLastCheck = async () => {
+const getLastCheck = async (checkType) => {
   try {
-    return await Check.getLastCheck();
+    return await Check.getLastCheck(checkType);
+  } catch (error) {
+    Sentry.captureException(error);
+    throw error;
+  }
+};
+const getCheck = async (id) => {
+  try {
+    return await Check.getCheck(id);
   } catch (error) {
     Sentry.captureException(error);
     throw error;
@@ -149,5 +157,6 @@ module.exports = {
   deleteCheck,
   editCheck,
   reportChecks,
-  getLastCheck
+  getLastCheck,
+  getCheck
 };
