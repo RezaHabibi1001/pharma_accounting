@@ -110,8 +110,8 @@ const typeDefs = gql`
 
   input FactorItemInput {
     drug: ID!
-    quantity: Float!
-    price: Int!
+    quantity: Int!
+    price: Float!
     total: Int!
     description: String
   }
@@ -119,8 +119,8 @@ const typeDefs = gql`
     buyFactorNumber: Int
     sellFactorNumber: Int
     drug: Drug
-    quantity: Float
-    price: Int
+    quantity: Int
+    price: Float
     total: Int
     description: String
   }
