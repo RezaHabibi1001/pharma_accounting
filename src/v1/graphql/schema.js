@@ -92,7 +92,7 @@ const typeDefs = gql`
     company: String
     country: String
     amount: Int
-    price: Int
+    price: Float
     stack: Stack
     expDate: String
     createdAt: DateTime
