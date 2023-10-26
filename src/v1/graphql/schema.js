@@ -186,8 +186,8 @@ const typeDefs = gql`
       drugStack: String
       startAmount: Int
       endAmount: Int
-      startPrice: Int
-      endPrice: Int
+      startPrice: Float
+      endPrice: Float
       startDate: DateTime
       endDate: DateTime
     ): [Drug]
