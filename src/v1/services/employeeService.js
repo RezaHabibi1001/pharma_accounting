@@ -33,7 +33,7 @@ const addEmployee = async (
     job: Joi.string().required(),
     contractDate: Joi.string(),
     workTime: Joi.string().required(),
-    salary: Joi.number().integer().required(),
+    salary: Joi.number().required(),
   });
   const { error, value } = schema.validate(data);
   if (error) {
@@ -96,7 +96,7 @@ const editEmployee = async (
     job: Joi.string(),
     contractDate: Joi.string(),
     workTime: Joi.string(),
-    salary: Joi.number().integer(),
+    salary: Joi.number(),
   });
   const { error, value } = schema.validate(data);
   if (error) {

@@ -57,7 +57,7 @@ const typeDefs = gql`
     _id: ID
     number: String
     type: String
-    amount: Int
+    amount: Float
     customerName: String
     shopAddress: String
     via: String
@@ -91,7 +91,7 @@ const typeDefs = gql`
     drugType: DrugType
     company: String
     country: String
-    amount: Int
+    amount: Float
     price: Float
     stack: Stack
     expDate: String
@@ -103,7 +103,7 @@ const typeDefs = gql`
     checkOutNumber: Int
     checkType: String
     date: String
-    amount: Int
+    amount: Float
     description: String
     customer: Customer
   }
@@ -131,7 +131,7 @@ const typeDefs = gql`
     factorType: FactorTypeEnum
     paymentType: PaymentTypeEnum
     date: String
-    amount: Int
+    amount: Float
     description: String
     customer: Customer
   }
@@ -142,7 +142,7 @@ const typeDefs = gql`
     factorType: FactorTypeEnum
     paymentType: PaymentTypeEnum
     date: String
-    amount: Int
+    amount: Float
     description: String
     customer: Customer
     items: [FactorItem]
@@ -152,7 +152,7 @@ const typeDefs = gql`
     bellNumber: Int
     bellType: String
     date: String!
-    amount: Int!
+    amount: Float!
     customer: Customer
     createdAt: DateTime
   }
@@ -184,8 +184,8 @@ const typeDefs = gql`
       drugCompany: String
       drugCountry: String
       drugStack: String
-      startAmount: Int
-      endAmount: Int
+      startAmount: Float
+      endAmount: Float
       startPrice: Float
       endPrice: Float
       startDate: DateTime
@@ -203,8 +203,8 @@ const typeDefs = gql`
       checkType: CheckTypeEnum
       startDate: DateTime
       endDate: DateTime
-      startAmount: Int
-      endAmount: Int
+      startAmount: Float
+      endAmount: Float
       customer: ID
     ): [Check]
     reportFactors(
@@ -214,8 +214,8 @@ const typeDefs = gql`
       drug: ID
       startDate: DateTime
       endDate: DateTime
-      startAmount: Int
-      endAmount: Int
+      startAmount: Float
+      endAmount: Float
     ): [Factor]
     getRepository:Int
     getStatistic:Statistic
@@ -247,7 +247,7 @@ const typeDefs = gql`
     addRemittance(
       number: String!
       type: ReittanceEnum!
-      amount: Int!
+      amount: Float!
       customerName: String!
       shopAddress: String!
       via: String!
@@ -258,7 +258,7 @@ const typeDefs = gql`
       remittanceId: ID!
       number: String
       type: ReittanceEnum
-      amount: Int
+      amount: Float
       customerName: String
       shopAddress: String
       via: String
@@ -307,8 +307,8 @@ const typeDefs = gql`
       drugType: ID!
       company: String!
       country: String!
-      amount: Int!
-      price: Int!
+      amount: Float!
+      price: Float!
       stack: ID!
       expDate: String!
     ): Drug
@@ -318,8 +318,8 @@ const typeDefs = gql`
       drugType: ID
       company: String
       country: String
-      amount: Int
-      price: Int
+      amount: Float
+      price: Float
       stack: ID
       expDate: String
     ): Drug
@@ -327,7 +327,7 @@ const typeDefs = gql`
     addCheck(
       checkType: CheckTypeEnum!
       date: String!
-      amount: Int!
+      amount: Float!
       description: String
       customer: ID!
     ): Check
@@ -335,7 +335,7 @@ const typeDefs = gql`
       checkId: ID!
       checkType: CheckTypeEnum!
       date: String!
-      amount: Int!
+      amount: Float!
       description: String
       customer: ID!
     ): Check
@@ -344,7 +344,7 @@ const typeDefs = gql`
       factorType: FactorTypeEnum!
       paymentType: PaymentTypeEnum!
       date: String!
-      amount: Int!
+      amount: Float!
       description: String
       customer: ID!
       items: [FactorItemInput]

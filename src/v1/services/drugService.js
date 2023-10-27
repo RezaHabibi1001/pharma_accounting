@@ -36,8 +36,8 @@ const addDrug = async (
     drugType: Joi.string().required(),
     company: Joi.string().required(),
     country: Joi.string().required(),
-    amount: Joi.number().integer().required(),
-    price: Joi.number().integer().required(),
+    amount: Joi.number().required(),
+    price: Joi.number().required(),
     stack: Joi.string().required(),
     expDate: Joi.string().required(),
   });
@@ -107,8 +107,8 @@ const editDrug = async (
     drugType: Joi.string(),
     company: Joi.string(),
     country: Joi.string(),
-    amount: Joi.number().integer(),
-    price: Joi.number().integer(),
+    amount: Joi.number(),
+    price: Joi.number(),
     stack: Joi.string(),
     expDate: Joi.string(),
   });

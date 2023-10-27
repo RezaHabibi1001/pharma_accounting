@@ -27,7 +27,7 @@ const addCheck = async (
       CheckTypeEnum.CHECK_OUT
     ).required(),
     date: Joi.string().required(),
-    amount: Joi.number().integer().required(),
+    amount: Joi.number().required(),
     description: Joi.string().min(0),
     customer: Joi.string().required(),
   });
@@ -89,7 +89,7 @@ const editCheck = async (
       CheckTypeEnum.CHECK_OUT
     ).required(),
     date: Joi.string().required(),
-    amount: Joi.number().integer().required(),
+    amount: Joi.number().required(),
     description: Joi.string().min(0),
     customer: Joi.string().required(),
   });

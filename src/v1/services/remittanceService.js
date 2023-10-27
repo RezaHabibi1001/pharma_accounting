@@ -34,7 +34,7 @@ const addRemittance = async (
   };
   const schema = Joi.object({
     number: Joi.string().required(),
-    amount: Joi.number().integer().required(),
+    amount: Joi.number().required(),
     customerName: Joi.string().required(),
     shopAddress: Joi.string().required(),
     via: Joi.string().required(),
@@ -105,7 +105,7 @@ const editRemittance = async (
   const schema = Joi.object({
     remittanceId: Joi.string().required(),
     number: Joi.string(),
-    amount: Joi.number().integer(),
+    amount: Joi.number(),
     customerName: Joi.string(),
     shopAddress: Joi.string(),
     via: Joi.string(),

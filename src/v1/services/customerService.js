@@ -26,7 +26,7 @@ const addCustomer = async (
     city: Joi.string().required(),
     address: Joi.string().required(),
     company: Joi.string().required(),
-    balance: Joi.number().integer().required(),
+    balance: Joi.number().required(),
   });
   const { error, value } = schema.validate(data);
   if (error) {
@@ -89,7 +89,7 @@ const editCustomer = async (
     city: Joi.string(),
     address: Joi.string(),
     company: Joi.string(),
-    balance: Joi.number().integer(),
+    balance: Joi.number(),
   });
   const { error, value } = schema.validate(data);
   if (error) {
