@@ -82,7 +82,7 @@ const typeDefs = gql`
     city: String
     address: String
     company: String
-    balance: Int
+    balance: Float
     createdAt: DateTime
   }
   type Drug {
@@ -196,8 +196,8 @@ const typeDefs = gql`
       balanceStatus: BalanceStatusEnum
       city: String
       address: String
-      startBalance: Int
-      endBalance: Int
+      startBalance: Float
+      endBalance: Float
     ): [Customer]
     reportChecks(
       checkType: CheckTypeEnum
@@ -290,7 +290,7 @@ const typeDefs = gql`
       city: String
       address: String
       company: String
-      balance: Int
+      balance: Float
     ): Customer
     editCustomer(
       customerId: ID!
@@ -299,7 +299,7 @@ const typeDefs = gql`
       city: String
       address: String
       company: String
-      balance: Int
+      balance: Float
     ): Customer
     deleteCustomer(id: ID!): Message
     addDrug(
