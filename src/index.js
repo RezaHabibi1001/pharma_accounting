@@ -66,9 +66,10 @@ const connectWithRetry = () => {
       Sentry.captureException(err);
       setTimeout(connectWithRetry, 5000);
     } else {
-      console.log("Connected to mongo DB");
+      // console.log("Connected to mongo DB");
       server.listen(PORT, async () => {
-        console.log(`server is running on port ${PORT}`);
+        // console.log(`server is running on port ${PORT}`);
+        console.log("Connected To Oxygen Database !");
         try {
           const keys = await redisClient.keys("*");
           await redisClient.del(keys, (err, result) => {});
