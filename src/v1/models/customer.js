@@ -12,7 +12,6 @@ const customerModel = new Schema(
       type: String,
       maxlength: [15, "phonNumber must be less than 15 characters."],
       trim: true,
-      required: true,
     },
 
     city: {
@@ -23,12 +22,10 @@ const customerModel = new Schema(
     address: {
       type: String,
       trim: true,
-      required: true,
     },
     company: {
       type: String,
       trim: true,
-      required: true,
     },
     balance: {
       type: Number,

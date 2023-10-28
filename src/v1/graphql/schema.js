@@ -112,7 +112,7 @@ const typeDefs = gql`
     drug: ID!
     quantity: Int!
     price: Float!
-    total: Int!
+    total: Float!
     description: String
   }
   type FactorItem {
