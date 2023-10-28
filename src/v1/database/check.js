@@ -24,7 +24,6 @@ const getChecks = async () => {
   ];
   try {
     let checks = await Check.aggregate(pipline);
-    console.log("checks", checks);
     return checks;
   } catch (error) {
     Sentry.captureException(error);
@@ -48,7 +47,6 @@ const addCheck = async (
       customer,
     }
     const lastCheck  =  await Check.find({checkType}).sort({createdAt:-1}).limit(1)
-    console.log("lastCheck" ,  lastCheck[0]);
     if(lastCheck[0]) {
     if(checkType == CheckTypeEnum.CHECK_IN) {
       providedData.checkInNumber = lastCheck[0].checkInNumber+1

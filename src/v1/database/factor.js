@@ -52,7 +52,6 @@ const addFactor = async (
       items,
     }
     const lastFactor  =  await Factor.find({factorType}).sort({createdAt:-1}).limit(1)
-    console.log("lastFactor" ,  lastFactor[0]);
     if(lastFactor[0]) {
     if(factorType == FactorTypeEnum.BUY) {
       providedData.buyFactorNumber = lastFactor[0].buyFactorNumber+1
@@ -169,7 +168,6 @@ const editFactor = async (
   }
   try {
     const oldFactor = await Factor.findById(factorId);
-    console.log(oldFactor);
     // const updateFactor = await Factor.findOneAndUpdate(
     //   { _id: factorId },
     //   {
@@ -196,12 +194,9 @@ const editFactor = async (
     // }
 
     if (customer != oldFactor.customer) {
-      console.log("cond 0");
 
       if (oldFactor.paymentType == PaymentTypeEnum.NO_CASH) {
-        console.log("cond 1");
         if (oldFactor.factorType == FactorTypeEnum.SELL) {
-          console.log("cond 2");
 
           // add old price  to custepmer
           await Customer.findOneAndUpdate(
@@ -210,7 +205,6 @@ const editFactor = async (
             { new: true }
           );
         } else if (oldFactor.factorType == FactorTypeEnum.BUY) {
-          console.log("cond 3");
 
           // subtract the buy value from customer
           await Customer.findOneAndUpdate(
@@ -220,8 +214,6 @@ const editFactor = async (
           );
         }
       }
-    } else {
-      console.log("old custene nedd not to update");
     }
 
     return updateFactor;

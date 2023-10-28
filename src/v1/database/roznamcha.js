@@ -145,7 +145,6 @@ const getStatistic = async date => {
       checkCount:await Check.count(),
       factorCount:await Factor.count(),
     }
-    console.log("this is get statistic " , data);
     return data
   } catch (error) {
     Sentry.captureException(error);

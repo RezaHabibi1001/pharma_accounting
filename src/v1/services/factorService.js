@@ -31,7 +31,6 @@ const addFactor = async (
     customer,
     items,
   };
-  console.log(data);
   const schema = Joi.object({
     factorType: Joi.valid(FactorTypeEnum.BUY, FactorTypeEnum.SELL).required(),
     paymentType: Joi.valid(
