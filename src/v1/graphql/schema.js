@@ -121,7 +121,7 @@ const typeDefs = gql`
     drug: Drug
     quantity: Int
     price: Float
-    total: Int
+    total: Float
     description: String
   }
   type Factor {
