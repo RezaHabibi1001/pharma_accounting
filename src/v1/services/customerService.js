@@ -22,10 +22,10 @@ const addCustomer = async (
   const data = { fullName, phoneNumber, city, address, company, balance };
   const schema = Joi.object({
     fullName: Joi.string().required(),
-    phoneNumber: Joi.string().required(),
+    phoneNumber: Joi.string(),
     city: Joi.string().required(),
-    address: Joi.string().required(),
-    company: Joi.string().required(),
+    address: Joi.string(),
+    company: Joi.string(),
     balance: Joi.number().required(),
   });
   const { error, value } = schema.validate(data);

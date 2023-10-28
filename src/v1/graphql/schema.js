@@ -251,7 +251,7 @@ const typeDefs = gql`
       customerName: String!
       shopAddress: String!
       via: String!
-      description: String!
+      description: String
       date: DateTime!
     ): Remittance
     editRemittance(
