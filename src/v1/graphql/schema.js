@@ -106,6 +106,7 @@ const typeDefs = gql`
     amount: Float
     description: String
     customer: Customer
+    createdAt:DateTime
   }
 
   input FactorItemInput {
@@ -134,6 +135,7 @@ const typeDefs = gql`
     amount: Float
     description: String
     customer: Customer
+    createdAt:DateTime
   }
   type LastFactor {
     _id: ID

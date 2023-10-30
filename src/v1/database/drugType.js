@@ -5,7 +5,14 @@ const { ObjectId } = require("mongoose").Types;
 
 const getDrugTypes = async () => {
   try {
-    return await DrugType.find();
+    const pipline = [
+      {
+        $sort: {
+          createdAt: -1
+        }
+      },
+    ]
+    return await DrugType.aggregate(pipline);
   } catch (error) {
     Sentry.captureException(error);
     throw error;

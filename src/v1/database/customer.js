@@ -7,7 +7,14 @@ const { ObjectId } = require("mongoose").Types;
 
 const getCustomers = async () => {
   try {
-    return await Customer.find();
+    const pipline = [
+      {
+        $sort: {
+          createdAt: -1
+        }
+      },
+    ]
+    return await Customer.aggregate(pipline);
   } catch (error) {
     Sentry.captureException(error);
     throw error;

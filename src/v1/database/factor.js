@@ -9,6 +9,11 @@ const { FactorTypeEnum, PaymentTypeEnum } = require("../utils/enum");
 const getFactors = async () => {
   const pipline = [
     {
+      $sort:{
+        createdAt:-1
+      }
+    },
+    {
       $lookup: {
         from: "customers",
         localField: "customer",

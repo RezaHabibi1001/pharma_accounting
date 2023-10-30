@@ -3,7 +3,14 @@ const Sentry = require("../../log");
 
 const getRemittances = async () => {
   try {
-    return await Remittance.find();
+    const pipline = [
+      {
+        $sort:{
+          createdAt:-1
+        }
+      }
+    ]
+    return await Remittance.aggregate(pipline);
   } catch (error) {
     Sentry.captureException(error);
     throw error;

@@ -27,6 +27,11 @@ const getRoznamcha = async date => {
       },
     },
     {
+      $sort:{
+        createdAt:-1
+      }
+    },
+    {
       $lookup: {
         from: "customers",
         localField: "customer",

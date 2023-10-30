@@ -8,6 +8,11 @@ const { CheckTypeEnum } = require("../utils/enum");
 const getChecks = async () => {
   const pipline = [
     {
+      $sort: {
+        createdAt: -1
+      }
+    },
+    {
       $lookup: {
         from: "customers",
         localField: "customer",

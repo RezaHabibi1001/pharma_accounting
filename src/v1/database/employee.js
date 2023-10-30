@@ -3,7 +3,14 @@ const Sentry = require("../../log");
 
 const getEmployees = async () => {
   try {
-    return await Employee.find();
+    const pipline =[
+      {
+        $sort:{
+          createdAt:-1
+        }
+      }
+    ]
+    return await Employee.aggregate(pipline);
   } catch (error) {
     Sentry.captureException(error);
     throw error;

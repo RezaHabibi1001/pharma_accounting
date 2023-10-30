@@ -6,6 +6,11 @@ const { FactorTypeEnum } = require("../utils/enum");
 const getDrugs = async () => {
   const pipline = [
     {
+      $sort: {
+        createdAt: -1
+      }
+    },
+    {
       $lookup: {
         from: "drugtypes",
         localField: "drugType",

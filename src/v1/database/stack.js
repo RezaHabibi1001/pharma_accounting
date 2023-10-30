@@ -5,7 +5,14 @@ const { ObjectId } = require("mongoose").Types;
 
 const getStacks = async () => {
   try {
-    return await Stack.find();
+    const pipline = [
+      {
+        $sort:{
+          createdAt:-1
+        }
+      }
+    ]
+    return await Stack.aggregate(pipline);
   } catch (error) {
     Sentry.captureException(error);
     throw error;
