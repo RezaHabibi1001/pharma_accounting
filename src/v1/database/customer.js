@@ -29,12 +29,6 @@ const addCustomer = async (
   company,
   balance
 ) => {
-  let customerAlreadyExist = await Customer.findOne({
-    company,
-  });
-  if (customerAlreadyExist) {
-    throw new Error(i18n.__("customer_already_exist"));
-  }
   try {
     const newCustomer = new Customer({
       fullName,
