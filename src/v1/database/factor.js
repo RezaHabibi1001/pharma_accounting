@@ -416,6 +416,110 @@ const getFactor = async (id) => {
     throw error;
   }
 };
+const getFactorByNumber = async (factorNumber , factorType ) => {
+  let filters = {factorType}
+  if(factorType == FactorTypeEnum.BUY) {
+    filters.buyFactorNumber = factorNumber
+  }
+  if(factorType == FactorTypeEnum.SELL) {
+    filters.sellFactorNumber = factorNumber
+  }
+  const pipline = [
+    { $match: filters},
+    {
+      $lookup: {
+        from: "customers",
+        localField: "customer",
+        foreignField: "_id",
+        as: "customer",
+      },
+    },
+    {
+      $unwind: {
+        path: "$customer",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $lookup: {
+        from: "drugs",
+        localField: "items.drug",
+        foreignField: "_id",
+        pipeline: [
+          {
+            $lookup: {
+              from: "drugtypes",
+              localField: "drugType",
+              foreignField: "_id",
+              pipeline: [
+                {
+                  $project: {
+                    _id: 1,
+                    title: 1,
+                  },
+                },
+              ],
+              as: "drugType",
+            },
+          },
+          {
+            $unwind: {
+              path: "$drugType",
+              preserveNullAndEmptyArrays: true,
+            },
+          },
+          {
+            $project: {
+              _id: 1,
+              name:1,
+              price:1,
+              amount:1,
+              company:1,
+              drugType: "$drugType",
+            },
+          },
+        ],
+        as: "drug",
+      },
+    },
+    {
+      $unwind: {
+        path: "$drug",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $project: {
+        buyFactorNumber: 1,
+        sellFactorNumber: 1,
+        factorType: 1,
+        paymentType: 1,
+        date: 1,
+        amount: 1,
+        description: 1,
+        customer: "$customer",
+        "items.quantity": 1,
+        "items.price": 1,
+        "items.total": 1,
+        "items.description": 1,
+        "items.drug": "$drug",
+        "item.drug.drugType":"$drug.drugType"
+
+
+      },
+    },
+  ];
+  try {
+    let factors = await Factor.aggregate(pipline);
+    if(factors.length == 0) {
+      return new Error(" sorry , No factor found with this number")
+    }
+    return factors[0];
+  } catch (error) {
+    Sentry.captureException(error);
+    throw error;
+  }
+};
 const reportFactors = async (
   factorType,
   paymentType,
@@ -489,5 +593,6 @@ module.exports = {
   editFactor,
   getLastFactor,
   reportFactors,
-  getFactor
+  getFactor,
+  getFactorByNumber
 };

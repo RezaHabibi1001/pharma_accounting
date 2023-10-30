@@ -95,6 +95,16 @@ module.exports = {
       throw error;
     }
   },
+  async getFactorByNumber(parent, args, context, info) {
+    try {
+      const { req } = context;
+      const { i18n, userId } = req;
+      const { factorNumber,factorType } = args;
+      return FactorService.getFactorByNumber(factorNumber , factorType);
+    } catch (error) {
+      throw error;
+    }
+  },
   async reportFactors(parent, args, context, info) {
     try {
       const { req } = context;

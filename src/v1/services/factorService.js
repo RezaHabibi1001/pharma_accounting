@@ -155,6 +155,14 @@ const getFactor = async (id) => {
     throw error;
   }
 };
+const getFactorByNumber = async (factorNumber ,  factorType) => {
+  try {
+    return await Factor.getFactorByNumber(factorNumber ,  factorType);
+  } catch (error) {
+    Sentry.captureException(error);
+    throw error;
+  }
+};
 const reportFactors = async (
   factorType,
   paymentType,
@@ -188,5 +196,6 @@ module.exports = {
   editFactor,
   getLastFactor,
   reportFactors,
-  getFactor
+  getFactor,
+  getFactorByNumber
 };

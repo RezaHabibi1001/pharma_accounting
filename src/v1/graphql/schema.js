@@ -179,6 +179,7 @@ const typeDefs = gql`
     getRoznamcha(date: DateTime): [Roznamcha]
     getLastFactor(factorType: FactorTypeEnum!): LastFactor
     getFactor(id:ID!): LastFactor
+    getFactorByNumber(factorNumber:Int! , factorType:FactorTypeEnum!):LastFactor
     getLastCheck(checkType:CheckTypeEnum!):Check
     reportDrugs(
       drugType: ID
