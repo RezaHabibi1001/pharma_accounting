@@ -8,7 +8,7 @@ const getDrugTypes = async () => {
     const pipline = [
       {
         $sort: {
-          createdAt: -1
+          title: 1
         }
       },
     ]

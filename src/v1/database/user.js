@@ -6,7 +6,7 @@ const getUsers = async () => {
     const pipline = [
       {
         $sort:{
-          createdAt:-1
+          userName:1
         }
       }
     ]

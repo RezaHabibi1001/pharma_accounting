@@ -5,11 +5,7 @@ const { ObjectId } = require("mongoose").Types;
 const { FactorTypeEnum } = require("../utils/enum");
 const getDrugs = async () => {
   const pipline = [
-    {
-      $sort: {
-        createdAt: -1
-      }
-    },
+    
     {
       $lookup: {
         from: "drugtypes",
@@ -37,6 +33,11 @@ const getDrugs = async () => {
         path: "$stack",
         preserveNullAndEmptyArrays: true,
       },
+    },
+    {
+      $sort: {
+        'drugType.title': 1
+      }
     },
   ];
   try {

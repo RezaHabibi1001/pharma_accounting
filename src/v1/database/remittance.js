@@ -6,7 +6,7 @@ const getRemittances = async () => {
     const pipline = [
       {
         $sort:{
-          createdAt:-1
+          customerName:1
         }
       }
     ]

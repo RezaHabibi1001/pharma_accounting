@@ -10,7 +10,7 @@ const getCustomers = async () => {
     const pipline = [
       {
         $sort: {
-          createdAt: -1
+          fullName: 1
         }
       },
     ]
