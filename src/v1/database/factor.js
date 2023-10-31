@@ -247,73 +247,46 @@ const getLastFactor = async factorType => {
       },
     },
     {
+      $unwind: "$items",
+    },
+    {
       $lookup: {
         from: "drugs",
         localField: "items.drug",
         foreignField: "_id",
-        pipeline: [
-          {
-            $lookup: {
-              from: "drugtypes",
-              localField: "drugType",
-              foreignField: "_id",
-              pipeline: [
-                {
-                  $project: {
-                    _id: 1,
-                    title: 1,
-                  },
-                },
-              ],
-              as: "drugType",
-            },
-          },
-          {
-            $unwind: {
-              path: "$drugType",
-              preserveNullAndEmptyArrays: true,
-            },
-          },
-          {
-            $project: {
-              _id: 1,
-              name:1,
-              price:1,
-              amount:1,
-              company:1,
-              drugType: "$drugType",
-            },
-          },
-        ],
-        as: "drug",
+        as: "items.drug",
       },
     },
     {
-      $unwind: {
-        path: "$drug",
-        preserveNullAndEmptyArrays: true,
+      $unwind: "$items.drug",
+    },
+    {
+      $lookup: {
+        from: "drugtypes",
+        localField: "items.drug.drugType",
+        foreignField: "_id",
+        as: "items.drug.drugType",
       },
     },
     {
-      $project: {
-        buyFactorNumber: 1,
-        sellFactorNumber: 1,
-        factorType: 1,
-        paymentType: 1,
-        date: 1,
-        amount: 1,
-        description: 1,
-        customer: "$customer",
-        "items.quantity": 1,
-        "items.price": 1,
-        "items.total": 1,
-        "items.description": 1,
-        "items.drug": "$drug",
-        "item.drug.drugType":"$drug.drugType"
-
+      $unwind: "$items.drug.drugType",
+    },
+    {
+      $group: {
+        _id: "$_id",
+        buyFactorNumber: { $first: "$buyFactorNumber" },
+        sellFactorNumber: { $first: "$sellFactorNumber" },
+        factorType: { $first: "$factorType" },
+        paymentType: { $first: "$paymentType" },
+        date: { $first: "$date" },
+        amount: { $first: "$amount" },
+        description: { $first: "$description" },
+        customer: { $first: "$customer" },
+        items: { $push: "$items" },
       },
     },
   ];
+
   try {
     let factors = await Factor.aggregate(pipline);
     return factors[0];
@@ -323,8 +296,10 @@ const getLastFactor = async factorType => {
   }
 };
 const getFactor = async (id) => {
-  const pipline = [
-    { $match: { _id:ObjectId(id) } },
+  const pipeline = [
+    {
+      $match: { _id: ObjectId(id) },
+    },
     {
       $lookup: {
         from: "customers",
@@ -340,76 +315,52 @@ const getFactor = async (id) => {
       },
     },
     {
+      $unwind: "$items",
+    },
+    {
       $lookup: {
         from: "drugs",
         localField: "items.drug",
         foreignField: "_id",
-        pipeline: [
-          {
-            $lookup: {
-              from: "drugtypes",
-              localField: "drugType",
-              foreignField: "_id",
-              pipeline: [
-                {
-                  $project: {
-                    _id: 1,
-                    title: 1,
-                  },
-                },
-              ],
-              as: "drugType",
-            },
-          },
-          {
-            $unwind: {
-              path: "$drugType",
-              preserveNullAndEmptyArrays: true,
-            },
-          },
-          {
-            $project: {
-              _id: 1,
-              name:1,
-              price:1,
-              amount:1,
-              company:1,
-              drugType: "$drugType",
-            },
-          },
-        ],
-        as: "drug",
+        as: "items.drug",
       },
     },
     {
-      $unwind: {
-        path: "$drug",
-        preserveNullAndEmptyArrays: true,
+      $unwind: "$items.drug",
+    },
+    {
+      $lookup: {
+        from: "drugtypes",
+        localField: "items.drug.drugType",
+        foreignField: "_id",
+        as: "items.drug.drugType",
       },
     },
     {
-      $project: {
-        buyFactorNumber: 1,
-        sellFactorNumber: 1,
-        factorType: 1,
-        paymentType: 1,
-        date: 1,
-        amount: 1,
-        description: 1,
-        customer: "$customer",
-        "items.quantity": 1,
-        "items.price": 1,
-        "items.total": 1,
-        "items.description": 1,
-        "items.drug": "$drug",
-        "item.drug.drugType":"$drug.drugType"
-
-
+      $unwind: "$items.drug.drugType",
+    },
+    {
+      $group: {
+        _id: "$_id",
+        buyFactorNumber: { $first: "$buyFactorNumber" },
+        sellFactorNumber: { $first: "$sellFactorNumber" },
+        factorType: { $first: "$factorType" },
+        paymentType: { $first: "$paymentType" },
+        date: { $first: "$date" },
+        amount: { $first: "$amount" },
+        description: { $first: "$description" },
+        customer: { $first: "$customer" },
+        items: { $push: "$items" },
       },
     },
   ];
+  
+
   try {
-    let factors = await Factor.aggregate(pipline);
+    const factors = await Factor.aggregate(pipeline);
+    if (factors.length === 0) {
+      throw new Error("Factor not found");
+    }
     return factors[0];
   } catch (error) {
     Sentry.captureException(error);
@@ -417,15 +368,18 @@ const getFactor = async (id) => {
   }
 };
 const getFactorByNumber = async (factorNumber , factorType ) => {
-  let filters = {factorType}
+  let filters = [{}];
+  filters.push({factorType})
   if(factorType == FactorTypeEnum.BUY) {
-    filters.buyFactorNumber = factorNumber
+    filters.push({buyFactorNumber:factorNumber})
   }
   if(factorType == FactorTypeEnum.SELL) {
-    filters.sellFactorNumber = factorNumber
+    filters.push({sellFactorNumber:factorNumber})
   }
   const pipline = [
-    { $match: filters},
+    {
+      $match: { $and: filters },
+    },
     {
       $lookup: {
         from: "customers",
@@ -441,71 +395,42 @@ const getFactorByNumber = async (factorNumber , factorType ) => {
       },
     },
     {
+      $unwind: "$items",
+    },
+    {
       $lookup: {
         from: "drugs",
         localField: "items.drug",
         foreignField: "_id",
-        pipeline: [
-          {
-            $lookup: {
-              from: "drugtypes",
-              localField: "drugType",
-              foreignField: "_id",
-              pipeline: [
-                {
-                  $project: {
-                    _id: 1,
-                    title: 1,
-                  },
-                },
-              ],
-              as: "drugType",
-            },
-          },
-          {
-            $unwind: {
-              path: "$drugType",
-              preserveNullAndEmptyArrays: true,
-            },
-          },
-          {
-            $project: {
-              _id: 1,
-              name:1,
-              price:1,
-              amount:1,
-              company:1,
-              drugType: "$drugType",
-            },
-          },
-        ],
-        as: "drug",
+        as: "items.drug",
       },
     },
     {
-      $unwind: {
-        path: "$drug",
-        preserveNullAndEmptyArrays: true,
+      $unwind: "$items.drug",
+    },
+    {
+      $lookup: {
+        from: "drugtypes",
+        localField: "items.drug.drugType",
+        foreignField: "_id",
+        as: "items.drug.drugType",
       },
     },
     {
-      $project: {
-        buyFactorNumber: 1,
-        sellFactorNumber: 1,
-        factorType: 1,
-        paymentType: 1,
-        date: 1,
-        amount: 1,
-        description: 1,
-        customer: "$customer",
-        "items.quantity": 1,
-        "items.price": 1,
-        "items.total": 1,
-        "items.description": 1,
-        "items.drug": "$drug",
-        "item.drug.drugType":"$drug.drugType"
-
-
+      $unwind: "$items.drug.drugType",
+    },
+    {
+      $group: {
+        _id: "$_id",
+        buyFactorNumber: { $first: "$buyFactorNumber" },
+        sellFactorNumber: { $first: "$sellFactorNumber" },
+        factorType: { $first: "$factorType" },
+        paymentType: { $first: "$paymentType" },
+        date: { $first: "$date" },
+        amount: { $first: "$amount" },
+        description: { $first: "$description" },
+        customer: { $first: "$customer" },
+        items: { $push: "$items" },
       },
     },
   ];
