@@ -1,7 +1,7 @@
 const { makeExecutableSchema } = require("@graphql-tools/schema");
 const { ApolloServer } = require("apollo-server-express");
-const constructResolvers = require("./v1/graphql/resolvers");
-const constructSchema = require("./v1/graphql/schema");
+const constructResolvers = require("./graphql/resolvers");
+const constructSchema = require("./graphql/schema");
 const typeDefs = constructSchema.typeDefs;
 const resolvers = constructResolvers.resolvers;
 const { ApolloArmor } = require("@escape.tech/graphql-armor");

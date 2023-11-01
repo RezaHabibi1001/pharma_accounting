@@ -1,6 +1,6 @@
 const DrugType = require("../models/drugType");
 const Drug = require("../models/drug");
-const Sentry = require("../../log");
+const Sentry = require("../log");
 const { ObjectId } = require("mongoose").Types;
 
 const getDrugTypes = async () => {

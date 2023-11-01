@@ -6,7 +6,7 @@ const { createServer } = require("http");
 const cors = require("cors");
 const { I18n } = require("i18n");
 const Sentry = require("./log");
-const { redisClient } = require("./v1/utils/redis");
+const { redisClient } = require("./utils/redis");
 
 const PORT = process.env.PORT || 4000;
 if (process.env.NODE_ENV != "production") {
@@ -19,7 +19,7 @@ const app = express();
 i18n.configure({
   locales: ["en"],
   defaultLocale: "en",
-  directory: path.join(__dirname, "/v1/locales"),
+  directory: path.join(__dirname, "/locales"),
 });
 
 app.use((req, res, next) => {
@@ -29,7 +29,7 @@ app.use((req, res, next) => {
 
 app.use(graphqlUploadExpress());
 app.use(cors());
-app.use("/", express.static(path.join(__dirname, "v1/uploads")));
+app.use("/", express.static(path.join(__dirname, "uploads")));
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(

@@ -1,5 +1,5 @@
 const Customer = require("../database/customer");
-const Sentry = require("../../log");
+const Sentry = require("../log");
 const Joi = require("joi");
 
 const getCustomers = async () => {

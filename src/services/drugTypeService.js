@@ -1,5 +1,5 @@
 const DrugType = require("../database/drugType");
-const Sentry = require("../../log");
+const Sentry = require("../log");
 const Joi = require("joi");
 const getDrugTypes = async () => {
   try {

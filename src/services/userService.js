@@ -1,5 +1,5 @@
 const User = require("../database/user");
-const Sentry = require("../../log");
+const Sentry = require("../log");
 const { RoleEnum } = require("../utils/enum");
 const Joi = require("joi");
 

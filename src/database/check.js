@@ -1,7 +1,7 @@
 const Check = require("../models/check");
 const Customer = require("../models/customer");
 const Roznamcha = require("../models/roznamcha");
-const Sentry = require("../../log");
+const Sentry = require("../log");
 const { addRoznamcha } = require("./roznamcha");
 const { ObjectId } = require("mongoose").Types;
 const { CheckTypeEnum } = require("../utils/enum");

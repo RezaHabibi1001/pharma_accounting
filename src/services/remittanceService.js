@@ -1,5 +1,5 @@
 const Remittance = require("../database/remittance");
-const Sentry = require("../../log");
+const Sentry = require("../log");
 const Joi = require("joi");
 const { RemittanceEnum } = require("../utils/enum");
 

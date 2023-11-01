@@ -1,5 +1,5 @@
 const Remittance = require("../models/remittance");
-const Sentry = require("../../log");
+const Sentry = require("../log");
 
 const getRemittances = async () => {
   try {

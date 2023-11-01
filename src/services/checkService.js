@@ -1,5 +1,5 @@
 const Check = require("../database/check");
-const Sentry = require("../../log");
+const Sentry = require("../log");
 const Joi = require("joi");
 const { CheckTypeEnum } = require("../utils/enum");
 

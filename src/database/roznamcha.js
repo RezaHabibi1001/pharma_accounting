@@ -6,7 +6,7 @@ const Drug = require("../models/drug");
 const Stack = require("../models/stack");
 const User = require("../models/user");
 
-const Sentry = require("../../log");
+const Sentry = require("../log");
 
 const addRoznamcha = async (bellNumber, bellType, date, amount, customer) => {
   const newRoznamcha = new Roznamcha({

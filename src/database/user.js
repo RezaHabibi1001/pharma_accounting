@@ -1,5 +1,5 @@
 const User = require("../models/user");
-const Sentry = require("../../log");
+const Sentry = require("../log");
 
 const getUsers = async () => {
   try {

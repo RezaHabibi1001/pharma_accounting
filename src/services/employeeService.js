@@ -1,5 +1,5 @@
 const Employee = require("../database/employee");
-const Sentry = require("../../log");
+const Sentry = require("../log");
 const Joi = require("joi");
 
 const getEmployees = async () => {

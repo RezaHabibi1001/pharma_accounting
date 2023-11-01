@@ -1,5 +1,5 @@
 const Roznamcha = require("../database/roznamcha");
-const Sentry = require("../../log");
+const Sentry = require("../log");
 const Joi = require("joi");
 
 const getRoznamcha = async date => {

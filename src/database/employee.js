@@ -1,5 +1,5 @@
 const Employee = require("../models/employee");
-const Sentry = require("../../log");
+const Sentry = require("../log");
 
 const getEmployees = async () => {
   try {
