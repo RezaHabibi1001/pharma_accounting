@@ -42,6 +42,7 @@ const {
   deleteDrug,
   editDrug,
   reportDrugs,
+  getDrugDetails
 } = require("../controllers/drugController");
 const {
   getChecks,
@@ -116,7 +117,8 @@ const resolvers = {
     getRepository,
     getLastCheck,
     getStatistic,
-    getFactorByNumber
+    getFactorByNumber,
+    getDrugDetails
   },
 };
 

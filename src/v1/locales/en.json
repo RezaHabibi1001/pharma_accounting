@@ -27,6 +27,5 @@
 	"delete_factor_before_delete_drug": "please delete related factor before delete drug ",
 	"delete_factor_before_delete_customer":"please delete related factore befor delete customer ",
 	"delete_check_before_delete_customer":"please delete related check befor delete customer ",
-	"factor_not_found_with_this_number":"there is no factor with the this number"
-
+	"no_factor_found_for_this_drug":"there is no factor with the this number"
 }

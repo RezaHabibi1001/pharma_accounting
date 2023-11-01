@@ -11,6 +11,17 @@ module.exports = {
       throw error;
     }
   },
+  async getDrugDetails(parent, args, context, info) {
+    try {
+      const { req } = context;
+      const { i18n, userId } = req;
+      const { id } =  args
+
+      return DrugService.getDrugDetails(i18n,id);
+    } catch (error) {
+      throw error;
+    }
+  },
   async addDrug(parent, args, context, info) {
     try {
       const { req } = context;

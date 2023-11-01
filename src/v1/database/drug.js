@@ -285,6 +285,81 @@ const reportDrugs = async (
     throw error;
   }
 };
+const getDrugDetails = async (i18n, id) => {
+  const pipeline = [
+    {
+      $match: { "items.drug": ObjectId(id) },
+    },
+    {
+      $lookup: {
+        from: "customers",
+        localField: "customer",
+        foreignField: "_id",
+        as: "customer",
+      },
+    },
+    {
+      $unwind: {
+        path: "$customer",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $unwind: "$items",
+    },
+    {
+      $lookup: {
+        from: "drugs",
+        localField: "items.drug",
+        foreignField: "_id",
+        as: "items.drug",
+      },
+    },
+    {
+      $unwind: "$items.drug",
+    },
+    {
+      $lookup: {
+        from: "drugtypes",
+        localField: "items.drug.drugType",
+        foreignField: "_id",
+        as: "items.drug.drugType",
+      },
+    },
+    {
+      $unwind: "$items.drug.drugType",
+    },
+    {
+      $match: { "items.drug._id": ObjectId(id) }, // Add this stage to match the specific drug ID
+    },
+    {
+      $group: {
+        _id: "$_id",
+        buyFactorNumber: { $first: "$buyFactorNumber" },
+        sellFactorNumber: { $first: "$sellFactorNumber" },
+        factorType: { $first: "$factorType" },
+        paymentType: { $first: "$paymentType" },
+        date: { $first: "$date" },
+        amount: { $first: "$amount" },
+        description: { $first: "$description" },
+        customer: { $first: "$customer" },
+        items: { $push: "$items" },
+      },
+    },
+  ];
+  
+
+  try {
+    const factors = await Factor.aggregate(pipeline);
+    if (factors.length === 0) {
+      return new Error(i18n.__("no_factor_found_for_this_drug"));
+    }
+    return factors;
+  } catch (error) {
+    Sentry.captureException(error);
+    throw error;
+  }
+};
 module.exports = {
   getDrugs,
   addDrug,
@@ -293,5 +368,6 @@ module.exports = {
   changeExistance,
   reportDrugs,
   rollbackDrug,
-  changePrice
+  changePrice,
+  getDrugDetails
 };

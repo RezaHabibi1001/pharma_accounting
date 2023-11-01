@@ -224,6 +224,7 @@ const typeDefs = gql`
     getRepository:Int
     getStatistic:Statistic
     getCheck(id:ID!):Check
+    getDrugDetails(id:ID):[LastFactor]
   }
   type Mutation {
     addUser(

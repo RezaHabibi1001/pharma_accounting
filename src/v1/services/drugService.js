@@ -10,6 +10,14 @@ const getDrugs = async () => {
     throw error;
   }
 };
+const getDrugDetails = async (i18n,id) => {
+  try {
+    return await Drug.getDrugDetails(i18n,id);
+  } catch (error) {
+    Sentry.captureException(error);
+    throw error;
+  }
+};
 const addDrug = async (
   i18n,
   name,
@@ -174,4 +182,5 @@ module.exports = {
   deleteDrug,
   editDrug,
   reportDrugs,
+  getDrugDetails
 };
