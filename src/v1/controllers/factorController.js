@@ -110,6 +110,7 @@ module.exports = {
       const { req } = context;
       const { i18n, userId } = req;
       const {
+        factorNumber,
         factorType,
         paymentType,
         customer,
@@ -120,6 +121,7 @@ module.exports = {
         endAmount,
       } = args;
       return FactorService.reportFactors(
+        factorNumber,
         factorType,
         paymentType,
         customer,

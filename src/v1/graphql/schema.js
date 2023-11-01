@@ -211,6 +211,7 @@ const typeDefs = gql`
       customer: ID
     ): [Check]
     reportFactors(
+      factorNumber:Int
       factorType: FactorTypeEnum
       paymentType: PaymentTypeEnum
       customer: ID

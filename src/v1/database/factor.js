@@ -446,6 +446,7 @@ const getFactorByNumber = async (factorNumber , factorType ) => {
   }
 };
 const reportFactors = async (
+  factorNumber,
   factorType,
   paymentType,
   customer,
@@ -484,6 +485,18 @@ const reportFactors = async (
       filters.push({ date: { $lte: endDate } });
     }
   }
+  
+    if(factorNumber) {
+      filters.push(
+        {
+        $or: [
+          {sellFactorNumber:factorNumber},
+          {buyFactorNumber:factorNumber},
+        ]
+      }
+    )
+  }
+
   const pipline = [
     {
       $match: { $and: filters },

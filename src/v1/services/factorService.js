@@ -164,6 +164,7 @@ const getFactorByNumber = async (factorNumber ,  factorType) => {
   }
 };
 const reportFactors = async (
+  factorNumber,
   factorType,
   paymentType,
   customer,
@@ -175,6 +176,7 @@ const reportFactors = async (
 ) => {
   try {
     return await Factor.reportFactors(
+      factorNumber,
       factorType,
       paymentType,
       customer,
