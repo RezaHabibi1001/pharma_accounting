@@ -114,6 +114,7 @@ const editCheck = async (
 };
 
 const reportChecks = async (
+  checkNumber,
   checkType,
   startDate,
   endDate,
@@ -123,6 +124,7 @@ const reportChecks = async (
 ) => {
   try {
     return await Check.reportChecks(
+      checkNumber,
       checkType,
       startDate,
       endDate,

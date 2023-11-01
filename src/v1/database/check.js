@@ -205,6 +205,7 @@ const editCheck = async (
   }
 };
 const reportChecks = async (
+  checkNumber,
   checkType,
   startDate,
   endDate,
@@ -239,6 +240,17 @@ const reportChecks = async (
       filters.push({ date: { $lte: endDate } });
     }
   }
+    
+  if(checkNumber) {
+    filters.push(
+      {
+      $or: [
+        {checkInNumber:checkNumber},
+        {checkOutNumber:checkNumber},
+      ]
+    }
+  )
+}
   const pipline = [
     {
       $match: { $and: filters },

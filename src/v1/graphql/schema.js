@@ -203,6 +203,7 @@ const typeDefs = gql`
       endBalance: Float
     ): [Customer]
     reportChecks(
+      checkNumber:Int
       checkType: CheckTypeEnum
       startDate: DateTime
       endDate: DateTime

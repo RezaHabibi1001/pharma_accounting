@@ -61,6 +61,7 @@ module.exports = {
       const { req } = context;
       const { i18n, userId } = req;
       const {
+        checkNumber,
         checkType,
         startDate,
         endDate,
@@ -69,6 +70,7 @@ module.exports = {
         customer,
       } = args;
       return CheckService.reportChecks(
+        checkNumber,
         checkType,
         startDate,
         endDate,
