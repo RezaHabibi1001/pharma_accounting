@@ -25,7 +25,9 @@
 	"delete_drugs_before_delete_stack": "please delete related drugs before delete Stack",
 	"failed_to_delete_factor": "Failed to delete factor",
 	"delete_factor_before_delete_drug": "please delete related factor before delete drug ",
-	"delete_factor_before_delete_customer":"please delete related factore befor delete customer ",
-	"delete_check_before_delete_customer":"please delete related check befor delete customer ",
-	"no_factor_found_for_this_drug":"there is no factor with the this number"
+	"delete_factor_before_delete_customer": "please delete related factore befor delete customer ",
+	"delete_check_before_delete_customer": "please delete related check befor delete customer ",
+	"no_factor_found_for_this_drug": "there is no factor with the this number",
+	"backup_successfully_done": "backup_successfully_done",
+	"failed_to_backup": "failed_to_backup"
 }

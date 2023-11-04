@@ -365,6 +365,7 @@ const typeDefs = gql`
     ): Factor
     deleteFactor(id: ID!): Message
     login(userName: String, password: String): User
+    getBackup:Message
   }
 
   schema {

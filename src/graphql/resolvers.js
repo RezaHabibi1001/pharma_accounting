@@ -63,7 +63,7 @@ const {
   getFactor,
   getFactorByNumber
 } = require("../controllers/factorController");
-const { getRoznamcha  , getRepository ,  getStatistic } = require("../controllers/roznamchaController");
+const { getRoznamcha  , getRepository ,  getStatistic  ,getBackup} = require("../controllers/roznamchaController");
 
 const resolvers = {
   Mutation: {
@@ -95,6 +95,7 @@ const resolvers = {
     editFactor,
     deleteFactor,
     login,
+    getBackup
   },
   Query: {
     getUsers,

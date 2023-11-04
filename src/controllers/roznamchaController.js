@@ -29,4 +29,14 @@ module.exports = {
       throw error;
     }
   },
+  async getBackup(parent, args, context, info) {
+    try {
+      const { req } = context;
+      const { i18n, userId } = req;
+      const { date } = args;
+      return RoznamchaService.getBackup(i18n);
+    } catch (error) {
+      throw error;
+    }
+  }
 };

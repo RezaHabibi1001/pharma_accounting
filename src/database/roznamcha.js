@@ -5,7 +5,7 @@ const Customer = require("../models/customer");
 const Drug = require("../models/drug");
 const Stack = require("../models/stack");
 const User = require("../models/user");
-
+const { exec } = require('child_process');
 const Sentry = require("../log");
 
 const addRoznamcha = async (bellNumber, bellType, date, amount, customer) => {
@@ -156,4 +156,23 @@ const getStatistic = async date => {
     throw error;
   }
 };
-module.exports = { addRoznamcha, getRoznamcha   , getRepository ,  getStatistic};
+const getBackup = async (i18n) => {
+  try {
+    let uri = "mongodb://localhost:27017/mydb";
+    let out = "/Users/yousufmohammadi/Desktop";
+    const backupCommand = `mongodump --uri ${uri} --out ${out}`;
+    exec(backupCommand, (error, stdout, stderr) => {
+      console.log("err" ,  error);
+      console.log("stdout" ,  stdout);
+      console.log("stderr" ,  stderr);
+      if (error) {
+      return { message: i18n.__("failed_to_backup") };
+      }
+    })
+    return { message: i18n.__("backup_successfully_done") };
+  } catch (error) {
+    Sentry.captureException(error);
+    throw error;
+  }
+};
+module.exports = { addRoznamcha, getRoznamcha   , getRepository ,  getStatistic ,  getBackup};
