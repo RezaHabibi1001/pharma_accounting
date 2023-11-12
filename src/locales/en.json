@@ -29,5 +29,6 @@
 	"delete_check_before_delete_customer": "please delete related check befor delete customer ",
 	"no_factor_found_for_this_drug": "there is no factor with the this number",
 	"backup_successfully_done": "backup_successfully_done",
-	"failed_to_backup": "failed_to_backup"
+	"failed_to_backup": "failed_to_backup",
+	"salary_deleted_successfully": "salary_deleted_successfully"
 }

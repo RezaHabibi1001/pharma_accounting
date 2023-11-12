@@ -1,8 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const { FactorTypeEnum, PaymentTypeEnum } = require("../utils/enum");
-const autoIncrement = require("mongoose-auto-increment");
-autoIncrement.initialize(mongoose.connection);
 
 const ItemSchema = new mongoose.Schema({
   drug: { type: Schema.Types.ObjectId, required: true },

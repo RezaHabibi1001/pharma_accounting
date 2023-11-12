@@ -33,6 +33,11 @@ const employeeModel = new Schema(
       trim: true,
       required: true,
     },
+    balance:{
+      type:Number,
+      trim:true,
+      default:0
+    }
   },
   { timestamps: true }
 );

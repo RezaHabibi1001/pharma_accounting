@@ -54,6 +54,11 @@ const {
   getLastCheck
 } = require("../controllers/checkController");
 const {
+  getSalaries,
+  addSalary,
+  deleteSalary
+} = require("../controllers/salaryController");
+const {
   getFactors,
   addFactor,
   deleteFactor,
@@ -95,7 +100,9 @@ const resolvers = {
     editFactor,
     deleteFactor,
     login,
-    getBackup
+    getBackup,
+    addSalary,
+    deleteSalary
   },
   Query: {
     getUsers,
@@ -119,7 +126,8 @@ const resolvers = {
     getLastCheck,
     getStatistic,
     getFactorByNumber,
-    getDrugDetails
+    getDrugDetails,
+    getSalaries
   },
 };
 

@@ -73,6 +73,7 @@ const typeDefs = gql`
     contractDate: String
     workTime: String
     salary: Int
+    balance:Int
     createdAt: DateTime
   }
   type Customer {
@@ -166,6 +167,15 @@ const typeDefs = gql`
     checkCount:Int,
     factorCount:Int
   }
+  type Salary {
+    _id:ID
+    employeeId:Employee
+    salaryNumber:Int
+    amount:Int
+    date:DateTime
+    description:String
+
+  }
   type Query {
     getUsers: [User]
     getDrugTypes: [DrugType]
@@ -226,6 +236,7 @@ const typeDefs = gql`
     getStatistic:Statistic
     getCheck(id:ID!):Check
     getDrugDetails(id:ID):[LastFactor]
+    getSalaries(employeeId:ID!):[Salary]
   }
   type Mutation {
     addUser(
@@ -366,6 +377,8 @@ const typeDefs = gql`
     deleteFactor(id: ID!): Message
     login(userName: String, password: String): User
     getBackup:Message
+    addSalary(employeeId:ID! , date:DateTime , amount:Int! , description:String):Salary
+    deleteSalary(id:ID):Message
   }
 
   schema {
