@@ -59,6 +59,11 @@ const {
   deleteSalary
 } = require("../controllers/salaryController");
 const {
+  getConsumes,
+  addConsume,
+  deleteConsume
+} = require("../controllers/consumeController");
+const {
   getFactors,
   addFactor,
   deleteFactor,
@@ -102,7 +107,9 @@ const resolvers = {
     login,
     getBackup,
     addSalary,
-    deleteSalary
+    deleteSalary,
+    addConsume,
+    deleteConsume
   },
   Query: {
     getUsers,
@@ -127,7 +134,8 @@ const resolvers = {
     getStatistic,
     getFactorByNumber,
     getDrugDetails,
-    getSalaries
+    getSalaries,
+    getConsumes
   },
 };
 
