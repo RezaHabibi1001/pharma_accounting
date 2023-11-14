@@ -1,7 +1,9 @@
 const Roznamcha = require("../models/roznamcha");
 const Factor = require("../models/factor");
+const Salary = require("../models/salary");
 const Check = require("../models/check");
 const Customer = require("../models/customer");
+const Consume = require("../models/consume");
 const Drug = require("../models/drug");
 const Stack = require("../models/stack");
 const User = require("../models/user");
@@ -55,8 +57,13 @@ const getRoznamcha = async date => {
   }
 };
 const getRepository = async date => {
-  try {
 
+  let factorsDifference;
+  let checkDifference;
+  let totalSalaries;
+  let totalConsumes;
+
+  try {
     const factors =  await Factor.aggregate([
       {
         $match:{paymentType:"Cash"}
@@ -122,8 +129,23 @@ const getRepository = async date => {
         }
       }
     ])
-    let factorsDifference;
-    let checkDifference;
+    const salaries =  await Salary.aggregate([
+      {
+        $group: {
+          _id: null,
+          totalSalary: { $sum: "$amount" }
+        }
+      }
+    ])
+    const consumes =  await Consume.aggregate([
+      {
+        $group: {
+          _id: null,
+          totalConsume: { $sum: "$amount" }
+        }
+      }
+    ])
+
     if(factors.length == 0) {
       factorsDifference = 0
     }else {
@@ -134,7 +156,17 @@ const getRepository = async date => {
     }else {
       checkDifference = checks[0].totalCheck
     }
-    return factorsDifference+checkDifference
+    if(salaries.length == 0) {
+      totalSalaries = 0
+    }else {
+      totalSalaries = salaries[0].totalSalary
+    }
+    if(consumes.length == 0) {
+      totalConsumes = 0
+    }else {
+      totalConsumes = consumes[0].totalConsume
+    }
+    return factorsDifference+checkDifference-totalSalaries-totalConsumes
   } catch (error) {
     Sentry.captureException(error);
     throw error;
