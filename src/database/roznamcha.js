@@ -10,14 +10,18 @@ const User = require("../models/user");
 const { exec } = require('child_process');
 const Sentry = require("../log");
 
-const addRoznamcha = async (bellNumber, bellType, date, amount, customer) => {
-  const newRoznamcha = new Roznamcha({
+const addRoznamcha = async (bellNumber, bellType, date, amount, refrenceId) => {
+  let providedDate = {
     bellNumber,
     bellType,
     date,
     amount,
-    customer,
-  });
+  }
+  if (bellType == "salary") {providedDate.employee = refrenceId}
+  else if(bellType == "consume") {providedDate.user = refrenceId}
+  else { providedDate.customer = refrenceId}
+  
+  const newRoznamcha = new Roznamcha(providedDate);
   let savedRoznamcha = await newRoznamcha.save();
   return savedRoznamcha;
 };
@@ -44,6 +48,34 @@ const getRoznamcha = async date => {
     {
       $unwind: {
         path: "$customer",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $lookup: {
+        from: "employees",
+        localField: "employee",
+        foreignField: "_id",
+        as: "employee",
+      },
+    },
+    {
+      $unwind: {
+        path: "$employee",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "user",
+        foreignField: "_id",
+        as: "user",
+      },
+    },
+    {
+      $unwind: {
+        path: "$user",
         preserveNullAndEmptyArrays: true,
       },
     },

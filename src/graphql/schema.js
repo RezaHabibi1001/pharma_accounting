@@ -157,6 +157,8 @@ const typeDefs = gql`
     date: String!
     amount: Float!
     customer: Customer
+    employee: Employee
+    user: User
     createdAt: DateTime
   }
   type Statistic {
