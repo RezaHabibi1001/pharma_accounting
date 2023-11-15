@@ -18,6 +18,7 @@ const addFactor = async (
   paymentType,
   date,
   amount,
+  discount,
   description,
   customer,
   items
@@ -27,6 +28,7 @@ const addFactor = async (
     paymentType,
     date,
     amount,
+    discount,
     description,
     customer,
     items,
@@ -39,6 +41,7 @@ const addFactor = async (
     ).required(),
     date: Joi.string().required(),
     amount: Joi.number().required(),
+    discount:Joi.number(),
     description: Joi.string().min(0),
     customer: Joi.string().required(),
     items: Joi.array().required(),
@@ -55,6 +58,7 @@ const addFactor = async (
       paymentType,
       date,
       amount,
+      discount,
       description,
       customer,
       items

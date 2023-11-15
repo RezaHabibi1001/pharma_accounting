@@ -42,6 +42,7 @@ const addFactor = async (
   paymentType,
   date,
   amount,
+  discount,
   description,
   customer,
   items
@@ -52,6 +53,7 @@ const addFactor = async (
       paymentType,
       date,
       amount,
+      discount,
       description,
       customer,
       items,
@@ -84,7 +86,7 @@ const addFactor = async (
     if (operator) {
       await Customer.findOneAndUpdate(
         { _id: ObjectId(customer) },
-        { $inc: { balance: operator + amount } },
+        { $inc: { balance: operator + (amount-discount) } },
         { new: true }
       );
     }
@@ -114,6 +116,7 @@ const deleteFactor = async (i18n, id) => {
       customer,
       factorType,
       paymentType,
+      discount,
       buyFactorNumber,
       sellFactorNumber,
       items,
@@ -127,7 +130,7 @@ const deleteFactor = async (i18n, id) => {
       if (paymentType == PaymentTypeEnum.NO_CASH) {
         const updatedCustomer = await Customer.findOneAndUpdate(
           { _id: customer },
-          { balance: balance - amount }
+          { balance: balance - (amount-discount) }
         );
       }
     }
@@ -139,7 +142,7 @@ const deleteFactor = async (i18n, id) => {
       if (paymentType == PaymentTypeEnum.NO_CASH) {
         const updatedCustomer = await Customer.findOneAndUpdate(
           { _id: customer },
-          { balance: balance + amount }
+          { balance: balance + (amount-discount) }
         );
       }
     }
@@ -280,6 +283,7 @@ const getLastFactor = async factorType => {
         paymentType: { $first: "$paymentType" },
         date: { $first: "$date" },
         amount: { $first: "$amount" },
+        discount: { $first: "$discount" },
         description: { $first: "$description" },
         customer: { $first: "$customer" },
         items: { $push: "$items" },
@@ -348,6 +352,7 @@ const getFactor = async (id) => {
         paymentType: { $first: "$paymentType" },
         date: { $first: "$date" },
         amount: { $first: "$amount" },
+        discount: { $first: "$discount" },
         description: { $first: "$description" },
         customer: { $first: "$customer" },
         items: { $push: "$items" },
@@ -428,6 +433,7 @@ const getFactorByNumber = async (factorNumber , factorType ) => {
         paymentType: { $first: "$paymentType" },
         date: { $first: "$date" },
         amount: { $first: "$amount" },
+        discount: { $first: "$discount" },
         description: { $first: "$description" },
         customer: { $first: "$customer" },
         items: { $push: "$items" },

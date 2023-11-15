@@ -20,6 +20,7 @@ module.exports = {
         paymentType,
         date,
         amount,
+        discount,
         description,
         customer,
         items,
@@ -30,6 +31,7 @@ module.exports = {
         paymentType,
         date,
         amount,
+        discount,
         description,
         customer,
         items

@@ -135,6 +135,7 @@ const typeDefs = gql`
     paymentType: PaymentTypeEnum
     date: String
     amount: Float
+    discount:Float
     description: String
     customer: Customer
     createdAt:DateTime
@@ -147,6 +148,7 @@ const typeDefs = gql`
     paymentType: PaymentTypeEnum
     date: String
     amount: Float
+    discount:Float
     description: String
     customer: Customer
     items: [FactorItem]
@@ -377,6 +379,7 @@ const typeDefs = gql`
       paymentType: PaymentTypeEnum!
       date: String!
       amount: Float!
+      discount:Float!
       description: String
       customer: ID!
       items: [FactorItemInput]

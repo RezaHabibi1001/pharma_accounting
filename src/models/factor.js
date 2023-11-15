@@ -40,6 +40,10 @@ const factorModel = new Schema(
       trim: true,
       required: true,
     },
+    discount: {
+      type: Number,
+      trim: true,
+    },
     description: {
       type: String,
       trim: true,
