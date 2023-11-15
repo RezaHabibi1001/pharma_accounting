@@ -27,7 +27,8 @@ const addCustomer = async (
   city,
   address,
   company,
-  balance
+  balance,
+  category
 ) => {
   try {
     const newCustomer = new Customer({
@@ -37,6 +38,7 @@ const addCustomer = async (
       address,
       company,
       balance,
+      category
     });
     return await newCustomer.save();
   } catch (error) {
@@ -74,7 +76,8 @@ const editCustomer = async (
   city,
   address,
   company,
-  balance
+  balance,
+  category
 ) => {
   let companyAlreadyExist = await Customer.findOne({
     company,
@@ -93,6 +96,7 @@ const editCustomer = async (
         address,
         company,
         balance,
+        category
       },
       { new: true }
     );
@@ -107,12 +111,14 @@ const reportCustomers = async (
   city,
   address,
   startBalance,
-  endBalance
+  endBalance,
+  category
 ) => {
   const filters = [{}];
   fullName && filters.push({ fullName });
   city && filters.push({ city });
   address && filters.push({ address });
+  category && filters.push({ category });
 
   if (balanceStatus) {
     if (balanceStatus == BalanceStatus.POSITIVE) {

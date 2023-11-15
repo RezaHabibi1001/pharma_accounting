@@ -17,9 +17,10 @@ const addCustomer = async (
   city,
   address,
   company,
-  balance
+  balance,
+  category
 ) => {
-  const data = { fullName, phoneNumber, city, address, company, balance };
+  const data = { fullName, phoneNumber, city, address, company, balance ,  category };
   const schema = Joi.object({
     fullName: Joi.string().required(),
     phoneNumber: Joi.string(),
@@ -27,6 +28,7 @@ const addCustomer = async (
     address: Joi.string(),
     company: Joi.string(),
     balance: Joi.number().required(),
+    category:Joi.string()
   });
   const { error, value } = schema.validate(data);
   if (error) {
@@ -40,7 +42,8 @@ const addCustomer = async (
       city,
       address,
       company,
-      balance
+      balance,
+      category
     );
   } catch (error) {
     Sentry.captureException(error);
@@ -71,7 +74,8 @@ const editCustomer = async (
   city,
   address,
   company,
-  balance
+  balance,
+  category
 ) => {
   const data = {
     customerId,
@@ -81,6 +85,7 @@ const editCustomer = async (
     address,
     company,
     balance,
+    category
   };
   const schema = Joi.object({
     customerId: Joi.string().required(),
@@ -90,6 +95,7 @@ const editCustomer = async (
     address: Joi.string(),
     company: Joi.string(),
     balance: Joi.number(),
+    category:Joi.string()
   });
   const { error, value } = schema.validate(data);
   if (error) {
@@ -104,7 +110,8 @@ const editCustomer = async (
       city,
       address,
       company,
-      balance
+      balance,
+      category
     );
   } catch (error) {
     Sentry.captureException(error);
@@ -117,7 +124,8 @@ const reportCustomers = async (
   city,
   address,
   startBalance,
-  endBalance
+  endBalance,
+  category
 ) => {
   try {
     return await Customer.reportCustomers(
@@ -126,7 +134,8 @@ const reportCustomers = async (
       city,
       address,
       startBalance,
-      endBalance
+      endBalance,
+      category
     );
   } catch (error) {
     Sentry.captureException(error);

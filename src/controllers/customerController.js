@@ -15,7 +15,7 @@ module.exports = {
     try {
       const { req } = context;
       const { i18n, userId } = req;
-      const { fullName, phoneNumber, city, address, company, balance } = args;
+      const { fullName, phoneNumber, city, address, company, balance, category } = args;
       return CustomerService.addCustomer(
         i18n,
         fullName,
@@ -23,7 +23,8 @@ module.exports = {
         city,
         address,
         company,
-        balance
+        balance,
+        category
       );
     } catch (error) {
       throw error;
@@ -51,6 +52,7 @@ module.exports = {
         address,
         company,
         balance,
+        category
       } = args;
       return CustomerService.editCustomer(
         i18n,
@@ -60,7 +62,8 @@ module.exports = {
         city,
         address,
         company,
-        balance
+        balance,
+        category
       );
     } catch (error) {
       throw error;
@@ -77,6 +80,7 @@ module.exports = {
         address,
         startBalance,
         endBalance,
+        category
       } = args;
       return CustomerService.reportCustomers(
         fullName,
@@ -84,7 +88,8 @@ module.exports = {
         city,
         address,
         startBalance,
-        endBalance
+        endBalance,
+        category
       );
     } catch (error) {
       throw error;

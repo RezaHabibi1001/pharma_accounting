@@ -13,7 +13,11 @@ const customerModel = new Schema(
       maxlength: [15, "phonNumber must be less than 15 characters."],
       trim: true,
     },
-
+    category:{
+      type:String,
+      trim:true,
+      required:true
+    },
     city: {
       type: String,
       required: true,

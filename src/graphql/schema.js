@@ -80,6 +80,7 @@ const typeDefs = gql`
     _id: ID
     fullName: String
     phoneNumber: String
+    category:String
     city: String
     address: String
     company: String
@@ -221,6 +222,7 @@ const typeDefs = gql`
       address: String
       startBalance: Float
       endBalance: Float
+      category:String
     ): [Customer]
     reportChecks(
       checkNumber:Int
@@ -319,6 +321,7 @@ const typeDefs = gql`
       address: String
       company: String
       balance: Float
+      category:String!
     ): Customer
     editCustomer(
       customerId: ID!
@@ -328,6 +331,7 @@ const typeDefs = gql`
       address: String
       company: String
       balance: Float
+      category:String
     ): Customer
     deleteCustomer(id: ID!): Message
     addDrug(
