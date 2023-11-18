@@ -37,7 +37,12 @@ const employeeModel = new Schema(
       type:Number,
       trim:true,
       default:0
-    }
+    },
+    lastPaymentDate: {
+      type: String,
+      trim: true,
+      required: true,
+    },
   },
   { timestamps: true }
 );

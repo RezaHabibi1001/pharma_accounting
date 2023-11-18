@@ -33,6 +33,7 @@ const addEmployee = async (
       contractDate,
       workTime,
       salary,
+      lastPaymentDate:contractDate
     });
     return await newEmployee.save();
   } catch (error) {
