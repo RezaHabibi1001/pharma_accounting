@@ -95,4 +95,15 @@ module.exports = {
       throw error;
     }
   },
+  async getCustomerDetails(parent, args, context, info) {
+    try {
+      const { req } = context;
+      const { i18n, userId } = req;
+      const { id } =  args
+  
+      return CustomerService.getCustomerDetails(i18n,id);
+    } catch (error) {
+      throw error;
+    }
+  }
 };

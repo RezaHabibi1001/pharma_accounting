@@ -150,10 +150,90 @@ const reportCustomers = async (
     throw error;
   }
 };
+const getCustomerDetails = async (i18n, id) => {
+  const pipeline = [
+    {
+      $match: { "customer": ObjectId(id) },
+    },
+    {
+      $lookup: {
+        from: "customers",
+        localField: "customer",
+        foreignField: "_id",
+        as: "customer",
+      },
+    },
+    {
+      $unwind: {
+        path: "$customer",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $group: {
+        _id: "$_id",
+        buyFactorNumber: { $first: "$buyFactorNumber" },
+        sellFactorNumber: { $first: "$sellFactorNumber" },
+        factorType: { $first: "$factorType" },
+        paymentType: { $first: "$paymentType" },
+        date: { $first: "$date" },
+        amount: { $first: "$amount" },
+        description: { $first: "$description" },
+        customer: { $first: "$customer" },
+      },
+    },
+  ];
+  const pipeline2 = [
+    {
+      $match: { "customer": ObjectId(id) },
+    },
+    {
+      $lookup: {
+        from: "customers",
+        localField: "customer",
+        foreignField: "_id",
+        as: "customer",
+      },
+    },
+    {
+      $unwind: {
+        path: "$customer",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+
+    {
+      $group: {
+        _id: "$_id",
+        checkInNumber: { $first: "$checkInNumber" },
+        checkOutNumber: { $first: "$checkOutNumber" },
+        checkType: { $first: "$checkType" },
+        date: { $first: "$date" },
+        amount: { $first: "$amount" },
+        description: { $first: "$description" },
+        customer: { $first: "$customer" },
+      },
+    },
+  ];
+
+  try {
+    const factors = await Factor.aggregate(pipeline);
+    const checks = await Check.aggregate(pipeline2);
+    let result  =  [...factors , ...checks] 
+    result.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+
+    return result
+  } catch (error) {
+    Sentry.captureException(error);
+    throw error;
+  }
+};
 module.exports = {
   getCustomers,
   addCustomer,
   deleteCustomer,
   editCustomer,
   reportCustomers,
+  getCustomerDetails
 };

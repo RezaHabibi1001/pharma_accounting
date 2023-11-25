@@ -189,6 +189,20 @@ const typeDefs = gql`
     date:DateTime
     description:String
   }
+  type FactorCheck {
+    _id: ID
+    checkInNumber:Int
+    checkOutNumber:Int
+    checkType:String
+    buyFactorNumber: Int
+    sellFactorNumber: Int
+    factorType: FactorTypeEnum
+    paymentType: PaymentTypeEnum
+    date: String
+    amount: Float
+    description: String
+    customer: Customer
+  }
   type Query {
     getUsers: [User]
     getDrugTypes: [DrugType]
@@ -246,12 +260,13 @@ const typeDefs = gql`
       startAmount: Float
       endAmount: Float
     ): [Factor]
-    getRepository:Int
+    getRepository:Float
     getStatistic:Statistic
     getCheck(id:ID!):Check
     getDrugDetails(id:ID):[LastFactor]
     getSalaries(employeeId:ID!):[Salary]
     getConsumes:[Consume]
+    getCustomerDetails(id:ID!):[FactorCheck]
   }
   type Mutation {
     addUser(
