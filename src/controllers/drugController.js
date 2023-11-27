@@ -5,8 +5,8 @@ module.exports = {
     try {
       const { req } = context;
       const { i18n, userId } = req;
-
-      return DrugService.getDrugs();
+      const {pageNumber ,perPage, searchItem} =  args
+      return DrugService.getDrugs(pageNumber ,perPage, searchItem);
     } catch (error) {
       throw error;
     }

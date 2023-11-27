@@ -3,9 +3,16 @@ const Factor = require("../models/factor");
 const Sentry = require("../log");
 const { ObjectId } = require("mongoose").Types;
 const { FactorTypeEnum } = require("../utils/enum");
-const getDrugs = async () => {
-  const pipline = [
-    
+const getDrugs = async (pageNumber , perPage , searchItem) => {
+  !pageNumber ? (pageNumber = 1) : pageNumber;
+  !perPage ? (perPage = 2) : perPage;
+  let offSet = (pageNumber - 1) * perPage;
+
+  const filter = {}
+  if (searchItem) {
+    filter.name = { $regex: searchItem, $options: "i" };
+  }
+ let pipline = [
     {
       $lookup: {
         from: "drugtypes",
@@ -40,6 +47,11 @@ const getDrugs = async () => {
       }
     },
   ];
+  if(perPage != -1) {
+      pipline.unshift({ $match:filter })
+      pipline.unshift({ $skip: offSet })
+      pipline.unshift({ $limit: perPage })
+  }
   try {
     let drugs = await Drug.aggregate(pipline);
     return drugs;

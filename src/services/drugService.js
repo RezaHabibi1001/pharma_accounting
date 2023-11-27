@@ -2,9 +2,9 @@ const Drug = require("../database/drug");
 const Sentry = require("../log");
 const Joi = require("joi");
 
-const getDrugs = async () => {
+const getDrugs = async (pageNumber , perPage , searchItem) => {
   try {
-    return await Drug.getDrugs();
+    return await Drug.getDrugs(pageNumber , perPage , searchItem);
   } catch (error) {
     Sentry.captureException(error);
     throw error;

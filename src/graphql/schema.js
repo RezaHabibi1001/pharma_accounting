@@ -210,7 +210,7 @@ const typeDefs = gql`
     getRemittances: [Remittance]
     getEmployees: [Employee]
     getCustomers: [Customer]
-    getDrugs: [Drug]
+    getDrugs(pageNumber:Int perPage:Int searchItem:String): [Drug]
     getChecks: [Check]
     getFactors: [Factor]
     getRoznamcha(date: DateTime): [Roznamcha]
