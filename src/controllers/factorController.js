@@ -5,8 +5,9 @@ module.exports = {
     try {
       const { req } = context;
       const { i18n, userId } = req;
+      const {pageNumber ,perPage, searchItem ,factorType , paymentType} =  args
 
-      return FactorService.getFactors();
+      return FactorService.getFactors(pageNumber ,perPage, searchItem ,factorType , paymentType);
     } catch (error) {
       throw error;
     }

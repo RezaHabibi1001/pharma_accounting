@@ -211,8 +211,8 @@ const typeDefs = gql`
     getEmployees: [Employee]
     getCustomers: [Customer]
     getDrugs(pageNumber:Int perPage:Int searchItem:String): [Drug]
-    getChecks: [Check]
-    getFactors: [Factor]
+    getChecks(pageNumber:Int perPage:Int searchItem:Int , checkType:CheckTypeEnum): [Check]
+    getFactors(pageNumber:Int perPage:Int searchItem:Int , factorType:FactorTypeEnum , paymentType:PaymentTypeEnum): [Factor]
     getRoznamcha(date: DateTime): [Roznamcha]
     getLastFactor(factorType: FactorTypeEnum!): LastFactor
     getFactor(id:ID!): LastFactor

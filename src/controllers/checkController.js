@@ -5,8 +5,8 @@ module.exports = {
     try {
       const { req } = context;
       const { i18n, userId } = req;
-
-      return CheckService.getChecks();
+      const {pageNumber ,perPage, searchItem ,checkType} =  args
+      return CheckService.getChecks(pageNumber ,perPage, searchItem ,checkType);
     } catch (error) {
       throw error;
     }

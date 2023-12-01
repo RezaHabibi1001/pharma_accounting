@@ -6,7 +6,27 @@ const { changeExistance, rollbackDrug , changePrice} = require("./drug");
 const Sentry = require("../log");
 const { ObjectId } = require("mongoose").Types;
 const { FactorTypeEnum, PaymentTypeEnum } = require("../utils/enum");
-const getFactors = async () => {
+const getFactors = async (pageNumber ,perPage, searchItem ,factorType , paymentType) => {
+  !pageNumber ? (pageNumber = 1) : pageNumber;
+  !perPage ? (perPage = 50) : perPage;
+  let offSet = (pageNumber - 1) * perPage;
+
+  const filter = [{}]
+  if(searchItem) {
+    filter.push({
+      $or: [
+        { buyFactorNumber: searchItem},
+        { sellFactorNumber:searchItem }
+      ]
+    });
+  }
+  if (factorType) {
+    filter.push({factorType})
+  }
+  if (paymentType) {
+    filter.push({paymentType})
+  }
+
   const pipline = [
     {
       $sort:{
@@ -28,6 +48,12 @@ const getFactors = async () => {
       },
     },
   ];
+  if(pageNumber != -1) {
+    pipline.unshift({ $limit: perPage })
+    pipline.unshift({ $skip: offSet })
+}
+  pipline.unshift({$match: { $and: filter }})
+
   try {
     let factors = await Factor.aggregate(pipline);
     return factors;

@@ -3,9 +3,9 @@ const Sentry = require("../log");
 const Joi = require("joi");
 const { CheckTypeEnum } = require("../utils/enum");
 
-const getChecks = async () => {
+const getChecks = async (pageNumber ,perPage, searchItem ,checkType) => {
   try {
-    return await Check.getChecks();
+    return await Check.getChecks(pageNumber ,perPage, searchItem ,checkType);
   } catch (error) {
     Sentry.captureException(error);
     throw error;

@@ -3,9 +3,9 @@ const Sentry = require("../log");
 const Joi = require("joi");
 const { FactorTypeEnum, PaymentTypeEnum } = require("../utils/enum");
 
-const getFactors = async () => {
+const getFactors = async (pageNumber ,perPage, searchItem ,factorType , paymentType) => {
   try {
-    return await Factor.getFactors();
+    return await Factor.getFactors(pageNumber ,perPage, searchItem ,factorType , paymentType);
   } catch (error) {
     Sentry.captureException(error);
     throw error;

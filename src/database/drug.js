@@ -5,7 +5,7 @@ const { ObjectId } = require("mongoose").Types;
 const { FactorTypeEnum } = require("../utils/enum");
 const getDrugs = async (pageNumber , perPage , searchItem) => {
   !pageNumber ? (pageNumber = 1) : pageNumber;
-  !perPage ? (perPage = 2) : perPage;
+  !perPage ? (perPage = 50) : perPage;
   let offSet = (pageNumber - 1) * perPage;
 
   const filter = {}
@@ -47,11 +47,11 @@ const getDrugs = async (pageNumber , perPage , searchItem) => {
       }
     },
   ];
-  if(perPage != -1) {
-      pipline.unshift({ $match:filter })
-      pipline.unshift({ $skip: offSet })
-      pipline.unshift({ $limit: perPage })
+  if(pageNumber != -1) {
+    pipline.unshift({ $limit: perPage })
+    pipline.unshift({ $skip: offSet })
   }
+  pipline.unshift({ $match:filter })
   try {
     let drugs = await Drug.aggregate(pipline);
     return drugs;

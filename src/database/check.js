@@ -5,7 +5,25 @@ const Sentry = require("../log");
 const { addRoznamcha } = require("./roznamcha");
 const { ObjectId } = require("mongoose").Types;
 const { CheckTypeEnum } = require("../utils/enum");
-const getChecks = async () => {
+const getChecks = async (pageNumber , perPage , searchItem , checkType) => {
+  !pageNumber ? (pageNumber = 1) : pageNumber;
+  !perPage ? (perPage = 50) : perPage;
+  let offSet = (pageNumber - 1) * perPage;
+
+  const filter = [{}]
+  if(searchItem) {
+    filter.push({
+      $or: [
+        { checkInNumber: searchItem},
+        { checkOutNumber:searchItem }
+      ]
+    });
+  }
+  
+  if (checkType) {
+    filter.push({checkType})
+  }
+
   const pipline = [
     {
       $sort: {
@@ -27,6 +45,12 @@ const getChecks = async () => {
       },
     },
   ];
+  if(pageNumber != -1) {
+    pipline.unshift({ $limit: perPage })
+    pipline.unshift({ $skip: offSet })
+}
+  pipline.unshift({$match: { $and: filter }})
+
   try {
     let checks = await Check.aggregate(pipline);
     return checks;
