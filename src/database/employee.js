@@ -1,5 +1,7 @@
 const Employee = require("../models/employee");
 const Sentry = require("../log");
+const {getLastMonthHejriDate , getCurrentHejriDate , getNextMonthHejriDate ,  getNextSomeMonth} =  require("../utils/helper")
+const moment = require('moment-jalaali');
 
 const getEmployees = async () => {
   try {
@@ -26,6 +28,11 @@ const addEmployee = async (
   salary
 ) => {
   try {
+    const date1 = moment(getCurrentHejriDate(), 'jYYYY-jMM-jDD');
+    const date2 = moment(contractDate, 'jYYYY-jMM-jDD');
+    const differenceInMonths = date1.diff(date2, 'months');
+    const lastPaymentDate = getNextSomeMonth(contractDate , differenceInMonths)
+
     const newEmployee = new Employee({
       fullName,
       phoneNumber,
@@ -33,7 +40,8 @@ const addEmployee = async (
       contractDate,
       workTime,
       salary,
-      lastPaymentDate:contractDate
+      balance:salary*differenceInMonths,
+      lastPaymentDate:lastPaymentDate
     });
     return await newEmployee.save();
   } catch (error) {

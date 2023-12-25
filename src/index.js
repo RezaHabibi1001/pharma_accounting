@@ -74,25 +74,17 @@ const connectWithRetry = () => {
         console.log("Connected To Oxygen Database !");
         try {
           const filter = { lastPaymentDate: { $lt:getLastMonthHejriDate()} };
+          let employees = await Employee.find(filter , {lastPaymentDate:1 })
+          employees.forEach(async element => {
+            let result = await Employee.findOneAndUpdate({_id:element._id} ,
+              [
+                  { $set: { salary: { $toInt: "$salary" } } },
+                  { $set: { balance: { $add: ["$balance", "$salary"] } } },
+                  { $set: { lastPaymentDate:  getNextMonthHejriDate(element.lastPaymentDate) } }
+            ],
+            {new:true}
+            )});
 
-          const prefix = { $substr: [ "$lastPaymentDate", 0, 5 ] };
-          const char6 = { $toInt: { $substr: [ "$lastPaymentDate", 5, 1 ] } };
-          const incrementedChar6 = { $add: [ char6, 1 ] };
-          const char6String = { $toString: incrementedChar6 };
-          const suffix = { $substr: [ "$lastPaymentDate", 6, -1 ] };
-          const updatedString = { $concat: [ prefix, char6String, suffix ] };
-
-          Employee.updateMany(filter, [
-            { $set: { salary: { $toInt: "$salary" } } }, // Convert salary field to integer
-            { $set: { balance: { $add: ["$balance", "$salary"] } } }, // Increment balance field
-            { $set: { lastPaymentDate: updatedString } }
-          ], (err, result) => {
-            if (err) {
-              console.log(err);
-            } else {
-              console.log(`${result.modifiedCount} documents updated`);
-            }
-          });
           const keys = await redisClient.keys("*");
           await redisClient.del(keys, (err, result) => {});
         } catch (errer) {
