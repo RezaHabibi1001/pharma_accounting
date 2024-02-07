@@ -33,8 +33,8 @@ module.exports = {
     try {
       const { req } = context;
       const { i18n, userId } = req;
-      const { date } = args;
-      return RoznamchaService.getBackup(i18n);
+      const { dbName } = args;
+      return RoznamchaService.getBackup(i18n,dbName);
     } catch (error) {
       throw error;
     }

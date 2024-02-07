@@ -9,6 +9,10 @@ const Stack = require("../models/stack");
 const User = require("../models/user");
 const { exec } = require('child_process');
 const Sentry = require("../log");
+const { MongoClient } = require('mongodb');
+const fs = require('fs');
+const path = require('path');
+const moment = require('moment-jalaali');
 
 const addRoznamcha = async (bellNumber, bellType, date, amount, refrenceId) => {
   let providedDate = {
@@ -220,20 +224,50 @@ const getStatistic = async date => {
     throw error;
   }
 };
-const getBackup = async (i18n) => {
+const getBackup = async (i18n ,dbName) => {
   try {
-    let uri = "mongodb://localhost:27017/mydb";
-    let out = "/Users/yousufmohammadi/Desktop";
-    const backupCommand = `mongodump --uri ${uri} --out ${out}`;
-    exec(backupCommand, (error, stdout, stderr) => {
-      console.log("err" ,  error);
-      console.log("stdout" ,  stdout);
-      console.log("stderr" ,  stderr);
-      if (error) {
-      return { message: i18n.__("failed_to_backup") };
+      const uri = 'mongodb://localhost:27017';
+      
+      const now = moment();
+      const backupDate =  now.format('jYYYY-jMM-jDD');
+
+      const outputDir = `./../backups/${dbName}-${backupDate}`;
+      const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+      
+        await client.connect();
+        const db = client.db(dbName);
+
+        // Fetch all collections in the database
+        const collections = await db.listCollections().toArray();
+
+        if (!fs.existsSync("./../backups")) {
+          fs.mkdirSync("./../backups");
       }
-    })
-    return { message: i18n.__("backup_successfully_done") };
+        // Create backup directory if it doesn't exist
+        if (!fs.existsSync(outputDir)) {
+            fs.mkdirSync(outputDir);
+        }
+
+        // Loop through collections and fetch documents
+        for (const collectionInfo of collections) {
+            const collectionName = collectionInfo.name;
+            const collection = db.collection(collectionName);
+            const documents = await collection.find({}).toArray();
+
+            // Create a directory for the collection if it doesn't exist
+            const collectionDir = path.join(outputDir, collectionName);
+            if (!fs.existsSync(collectionDir)) {
+                fs.mkdirSync(collectionDir);
+            }
+
+            // Write each document to a separate JSON file
+            documents.forEach((document) => {
+                const fileName = path.join(collectionDir, `${collectionName}.json`);
+                fs.writeFileSync(fileName, JSON.stringify(document));
+            });
+        }
+
+  return { message: i18n.__("backup_successfully_done") };
   } catch (error) {
     Sentry.captureException(error);
     throw error;

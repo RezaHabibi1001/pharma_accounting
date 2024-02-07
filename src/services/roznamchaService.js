@@ -36,9 +36,9 @@ const getStatistic = async date => {
     throw error;
   }
 };
-const getBackup = async (i18n) => {
+const getBackup = async (i18n , dbName) => {
   try {
-    return await Roznamcha.getBackup(i18n);
+    return await Roznamcha.getBackup(i18n,dbName);
   } catch (error) {
     Sentry.captureException(error);
     throw error;

@@ -409,7 +409,7 @@ const typeDefs = gql`
     ): Factor
     deleteFactor(id: ID!): Message
     login(userName: String, password: String): User
-    getBackup:Message
+    getBackup(dbName:String!):Message
     addSalary(employeeId:ID! , date:DateTime , amount:Int! , description:String):Salary
     deleteSalary(id:ID):Message
     addConsume(name:String , date:DateTime , amount:Int! , description:String , userId:ID!):Consume
