@@ -38,5 +38,15 @@ module.exports = {
     } catch (error) {
       throw error;
     }
+  },
+  async selectDatabase(parent, args, context, info) {
+    try {
+      const { req } = context;
+      const { i18n, userId } = req;
+      const { dbName } = args;
+      return RoznamchaService.selectDatabase(i18n,dbName);
+    } catch (error) {
+      throw error;
+    }
   }
 };

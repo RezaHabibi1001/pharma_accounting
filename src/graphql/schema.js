@@ -203,6 +203,12 @@ const typeDefs = gql`
     description: String
     customer: Customer
   }
+  type Period {
+    _id: ID
+    name:String
+    isClosed:Boolean
+    createdAt:DateTime
+  }
   type Query {
     getUsers: [User]
     getDrugTypes: [DrugType]
@@ -267,6 +273,8 @@ const typeDefs = gql`
     getSalaries(employeeId:ID!):[Salary]
     getConsumes:[Consume]
     getCustomerDetails(id:ID!):[FactorCheck]
+    getPeriods:[Period]
+
   }
   type Mutation {
     addUser(
@@ -414,6 +422,11 @@ const typeDefs = gql`
     deleteSalary(id:ID):Message
     addConsume(name:String , date:DateTime , amount:Int! , description:String , userId:ID!):Consume
     deleteConsume(id:ID):Message
+    selectDatabase(dbName:String!):Message!
+    addPeriod(name:String!):Period
+    deletePeriod(id:ID!):Message
+    editPeriod(periodId:ID! , name:String, isClosed:Boolean):Period
+
   }
 
   schema {

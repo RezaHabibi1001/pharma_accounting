@@ -32,5 +32,9 @@
 	"failed_to_backup": "failed_to_backup",
 	"salary_deleted_successfully": "salary_deleted_successfully",
 	"consume_deleted_successfully": "consume_deleted_successfully",
-	"failed_to_delete_consume": "failed_to_delete_consume"
+	"failed_to_delete_consume": "failed_to_delete_consume",
+	"database_selected_successfully": "database selected successfully",
+	"period_already_exist":"A period already exist with this name",
+	"period_deleted_successfully":"period deleted successfully",
+	"failed_to_delete_period":"failed to delete period"
 }

@@ -92,6 +92,6 @@ const connectWithRetry = () => {
         }
       });
     }
-  });
-};
+}
+  )}
 connectWithRetry();

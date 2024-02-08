@@ -74,7 +74,8 @@ const {
   getFactor,
   getFactorByNumber
 } = require("../controllers/factorController");
-const { getRoznamcha  , getRepository ,  getStatistic  ,getBackup} = require("../controllers/roznamchaController");
+const { getRoznamcha  , getRepository ,  getStatistic  ,getBackup ,  selectDatabase} = require("../controllers/roznamchaController");
+const { getPeriods,addPeriod,deletePeriod,editPeriod} = require("../controllers/periodController");
 
 const resolvers = {
   Mutation: {
@@ -110,7 +111,11 @@ const resolvers = {
     addSalary,
     deleteSalary,
     addConsume,
-    deleteConsume
+    deleteConsume,
+    selectDatabase,
+    addPeriod,
+    deletePeriod,
+    editPeriod
   },
   Query: {
     getUsers,
@@ -137,7 +142,8 @@ const resolvers = {
     getDrugDetails,
     getSalaries,
     getConsumes,
-    getCustomerDetails
+    getCustomerDetails,
+    getPeriods
   },
 };
 

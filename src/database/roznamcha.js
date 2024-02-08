@@ -7,12 +7,15 @@ const Consume = require("../models/consume");
 const Drug = require("../models/drug");
 const Stack = require("../models/stack");
 const User = require("../models/user");
-const { exec } = require('child_process');
 const Sentry = require("../log");
 const { MongoClient } = require('mongodb');
+const mongoose = require("mongoose");
+
 const fs = require('fs');
 const path = require('path');
 const moment = require('moment-jalaali');
+const {getLastMonthHejriDate , getCurrentHejriDate , getNextMonthHejriDate} =  require("./../utils/helper")
+const Employee = require("../models/employee")
 
 const addRoznamcha = async (bellNumber, bellType, date, amount, refrenceId) => {
   let providedDate = {
@@ -273,4 +276,28 @@ const getBackup = async (i18n ,dbName) => {
     throw error;
   }
 };
-module.exports = { addRoznamcha, getRoznamcha   , getRepository ,  getStatistic ,  getBackup};
+const selectDatabase = async (i18n ,dbName) => {
+  await mongoose.connection.close();
+  mongoose.set("strictQuery", true);
+  mongoose.connect(`mongodb://localhost:27017/${dbName}`, { family: 4 }, async (err) =>  {
+    if (err) {
+      console.log("failed connection");
+      Sentry.captureException(err);
+    } else {
+        console.log('Connected To ');
+          const filter = { lastPaymentDate: { $lt:getLastMonthHejriDate()} };
+          let employees = await Employee.find(filter , {lastPaymentDate:1 })
+          employees.forEach(async element => {
+            let result = await Employee.findOneAndUpdate({_id:element._id} ,
+              [
+                  { $set: { salary: { $toInt: "$salary" } } },
+                  { $set: { balance: { $add: ["$balance", "$salary"] } } },
+                  { $set: { lastPaymentDate:  getNextMonthHejriDate(element.lastPaymentDate) } }
+            ],
+            {new:true}
+            )});
+          }
+        });
+        return { message: i18n.__("database_selected_successfully") };
+      };
+module.exports = { addRoznamcha, getRoznamcha   , getRepository ,  getStatistic ,  getBackup ,  selectDatabase};

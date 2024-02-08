@@ -44,9 +44,18 @@ const getBackup = async (i18n , dbName) => {
     throw error;
   }
 };
+const selectDatabase = async (i18n , dbName) => {
+  try {
+    return await Roznamcha.selectDatabase(i18n,dbName);
+  } catch (error) {
+    Sentry.captureException(error);
+    throw error;
+  }
+};
 module.exports = {
   getRoznamcha,
   getRepository,
   getStatistic,
-  getBackup
+  getBackup,
+  selectDatabase
 };
