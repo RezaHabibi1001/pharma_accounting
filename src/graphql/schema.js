@@ -209,6 +209,13 @@ const typeDefs = gql`
     isClosed:Boolean
     createdAt:DateTime
   }
+  type Profile {
+    titleOne:String
+    titleTwo:String
+    owners:[String]
+    phones:[String]
+    address:String
+  }
   type Query {
     getUsers: [User]
     getDrugTypes: [DrugType]
@@ -274,7 +281,7 @@ const typeDefs = gql`
     getConsumes:[Consume]
     getCustomerDetails(id:ID!):[FactorCheck]
     getPeriods:[Period]
-
+    getProfile:Profile
   }
   type Mutation {
     addUser(
@@ -426,7 +433,8 @@ const typeDefs = gql`
     addPeriod(name:String!):Period
     deletePeriod(id:ID!):Message
     editPeriod(periodId:ID! , name:String, isClosed:Boolean):Period
-
+    addProfile(titleOne:String!, titleTwo:String!, owners:[String]!, phones:[String]!, address:String!):Profile
+    editProfile(titleOne:String, titleTwo:String, owners:[String], phones:[String], address:String):Profile
   }
 
   schema {

@@ -7,6 +7,10 @@ const Consume = require("../models/consume");
 const Drug = require("../models/drug");
 const Stack = require("../models/stack");
 const User = require("../models/user");
+const Period =  require("../models/period")
+const Remittance  = require("../models/remittance")
+const DrugType =  require("../models/drugType")
+const Employee = require("../models/employee")
 const Sentry = require("../log");
 const { MongoClient } = require('mongodb');
 const mongoose = require("mongoose");
@@ -15,7 +19,6 @@ const fs = require('fs');
 const path = require('path');
 const moment = require('moment-jalaali');
 const {getLastMonthHejriDate , getCurrentHejriDate , getNextMonthHejriDate} =  require("./../utils/helper")
-const Employee = require("../models/employee")
 
 const addRoznamcha = async (bellNumber, bellType, date, amount, refrenceId) => {
   let providedDate = {
@@ -277,6 +280,7 @@ const getBackup = async (i18n ,dbName) => {
   }
 };
 const selectDatabase = async (i18n ,dbName) => {
+
   await mongoose.connection.close();
   mongoose.set("strictQuery", true);
   mongoose.connect(`mongodb://localhost:27017/${dbName}`, { family: 4 }, async (err) =>  {
