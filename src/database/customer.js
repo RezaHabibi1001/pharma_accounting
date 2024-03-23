@@ -222,7 +222,29 @@ const getCustomerDetails = async (i18n, id) => {
     let result  =  [...factors , ...checks] 
     result.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-
+    for(let i=0 ; i < result.length; i++ ) {
+      let currentBalance = 0
+      for(let j=0; j <= i; j++){
+        if(result[j]?.paymentType == "No_Cash") {
+            if(result[j]?.factorType == "Buy"){
+              currentBalance+=result[j].amount
+            }
+            if(result[j]?.factorType == "Sell") {
+              currentBalance-=result[j].amount
+            }
+        }
+        if(result[j]?.checkType == "Check_In") {
+          currentBalance+=result[j].amount
+        }
+        if(result[j]?.checkType == "Check_Out"){
+          currentBalance-=result[j].amount
+        }
+        if(i==j){
+          result[j].customerBalance = currentBalance
+        }
+      }
+    }
+    console.log("this is result " ,  result)
     return result
   } catch (error) {
     Sentry.captureException(error);

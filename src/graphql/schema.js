@@ -201,6 +201,7 @@ const typeDefs = gql`
     date: String
     amount: Float
     description: String
+    customerBalance :Float
     customer: Customer
   }
   type Period {
