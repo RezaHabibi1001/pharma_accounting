@@ -28,6 +28,12 @@ const profileModle = new Schema(
       type: String,
       trim: true,
     },
+    logo: {
+      type: String,
+    },
+    barcode: {
+      type: String,
+    },
   },
   { timestamps: true }
 );

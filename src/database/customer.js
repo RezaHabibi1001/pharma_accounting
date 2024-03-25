@@ -180,6 +180,7 @@ const getCustomerDetails = async (i18n, id) => {
         amount: { $first: "$amount" },
         description: { $first: "$description" },
         customer: { $first: "$customer" },
+        createdAt: { $first: "$createdAt" },
       },
     },
   ];
@@ -212,6 +213,8 @@ const getCustomerDetails = async (i18n, id) => {
         amount: { $first: "$amount" },
         description: { $first: "$description" },
         customer: { $first: "$customer" },
+        createdAt: { $first: "$createdAt" },
+
       },
     },
   ];
@@ -220,7 +223,7 @@ const getCustomerDetails = async (i18n, id) => {
     const factors = await Factor.aggregate(pipeline);
     const checks = await Check.aggregate(pipeline2);
     let result  =  [...factors , ...checks] 
-    result.sort((a, b) => new Date(a.date) - new Date(b.date));
+    result.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 
     for(let i=0 ; i < result.length; i++ ) {
       let currentBalance = 0
@@ -244,7 +247,6 @@ const getCustomerDetails = async (i18n, id) => {
         }
       }
     }
-    console.log("this is result " ,  result)
     return result
   } catch (error) {
     Sentry.captureException(error);
