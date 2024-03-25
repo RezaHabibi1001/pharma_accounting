@@ -203,6 +203,7 @@ const typeDefs = gql`
     description: String
     customerBalance :Float
     customer: Customer
+    createdAt:DateTime
   }
   type Period {
     _id: ID
@@ -216,6 +217,8 @@ const typeDefs = gql`
     owners:[String]
     phones:[String]
     address:String
+    logo:String
+    barcode:String
   }
   type Query {
     getUsers: [User]

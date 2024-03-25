@@ -10,6 +10,9 @@ const { redisClient } = require("./utils/redis");
 const Employee = require("./models/employee")
 const moment = require("moment")
 const {getLastMonthHejriDate , getCurrentHejriDate , getNextMonthHejriDate} =  require("./utils/helper")
+const multer = require('multer');
+const Profile = require("./models/profile");
+
 const PORT = process.env.PORT || 4000;
 if (process.env.NODE_ENV != "production") {
   require("dotenv").config();
@@ -27,6 +30,39 @@ i18n.configure({
 app.use((req, res, next) => {
   req.i18n = i18n;
   next();
+});
+let ext;
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, `${__dirname}/uploads`)
+  },
+  filename: function (req, file, cb) {
+    let imageType;
+    if(req.body?.logo) {
+      imageType = "logo"
+    }
+    if(req.body?.barcode) {
+      imageType="barcode"
+    }
+     ext = path.extname(file.originalname);
+    cb(null, imageType+ext);
+  }
+});
+const upload = multer({ storage: storage });
+app.post('/upload', upload.single('image'), async (req, res) => {
+  if (!req.file) {
+    return res.status(400).send('No files were uploaded.');
+  }
+
+  if(req.body?.logo) {
+     let logo =`${__dirname}/uploads/logo${ext}`
+     await Profile.findOneAndUpdate({ },{logo},{ new: true });
+  }
+  if(req.body?.barcode) {
+    let barcode =`${__dirname}/uploads/barcode${ext}`
+    await Profile.findOneAndUpdate({ },{barcode},{ new: true });
+  }
+  res.send('File uploaded successfully.');
 });
 
 app.use(graphqlUploadExpress());
