@@ -31,40 +31,46 @@ app.use((req, res, next) => {
   req.i18n = i18n;
   next();
 });
-let ext;
-const storage = multer.diskStorage({
+let logoSuffix;
+let barcodeSuffix;
+// upload logo started
+const logoStorage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, `${__dirname}/uploads`)
   },
   filename: function (req, file, cb) {
-    let imageType;
-    if(req.body?.logo) {
-      imageType = "logo"
-    }
-    if(req.body?.barcode) {
-      imageType="barcode"
-    }
-     ext = path.extname(file.originalname);
-    cb(null, imageType+ext);
+    logoSuffix = path.extname(file.originalname);
+     cb(null,`logo${logoSuffix}`);
   }
 });
-const upload = multer({ storage: storage });
-app.post('/upload', upload.single('image'), async (req, res) => {
+const upload = multer({ storage: logoStorage });
+app.post('/uploadLogo', upload.single('image'), async (req, res) => {
   if (!req.file) {
     return res.status(400).send('No files were uploaded.');
   }
-
-  if(req.body?.logo) {
-     let logo =`${__dirname}/uploads/logo${ext}`
-     await Profile.findOneAndUpdate({ },{logo},{ new: true });
-  }
-  if(req.body?.barcode) {
-    let barcode =`${__dirname}/uploads/barcode${ext}`
-    await Profile.findOneAndUpdate({ },{barcode},{ new: true });
-  }
+  let url =`${__dirname}/uploads/logo${logoSuffix}`
+  await Profile.findOneAndUpdate({ },{logo:url},{ new: true });
   res.send('File uploaded successfully.');
 });
-
+// upload barcode started
+const barcodeStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, `${__dirname}/uploads`)
+  },
+  filename: function (req, file, cb) {
+    barcodeSuffix = path.extname(file.originalname);
+     cb(null,`barcode${barcodeSuffix}`);
+  }
+});
+const upload2 = multer({ storage: barcodeStorage });
+app.post('/uploadBarcode', upload2.single('image'), async (req, res) => {
+  if (!req.file) {
+    return res.status(400).send('No files were uploaded.');
+  }
+  let url =`${__dirname}/uploads/barcode${barcodeSuffix}`
+  await Profile.findOneAndUpdate({ },{barcode:url},{ new: true });
+  res.send('File uploaded successfully.');
+});
 app.use(graphqlUploadExpress());
 app.use(cors());
 app.use("/", express.static(path.join(__dirname, "uploads")));
