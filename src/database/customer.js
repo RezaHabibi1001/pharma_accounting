@@ -223,7 +223,7 @@ const getCustomerDetails = async (i18n, id) => {
     const factors = await Factor.aggregate(pipeline);
     const checks = await Check.aggregate(pipeline2);
     let result  =  [...factors , ...checks] 
-    result.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+    result.sort((a, b) => new Date(a.date) - new Date(b.date));
 
     for(let i=0 ; i < result.length; i++ ) {
       let currentBalance = 0
