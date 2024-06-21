@@ -40,7 +40,7 @@ const logoStorage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     logoSuffix = path.extname(file.originalname);
-     cb(null,`logo${logoSuffix}`);
+     cb(null,`logo${Math.random()}${logoSuffix}`);
   }
 });
 const upload = multer({ storage: logoStorage });
@@ -59,7 +59,7 @@ const barcodeStorage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     barcodeSuffix = path.extname(file.originalname);
-     cb(null,`barcode${barcodeSuffix}`);
+     cb(null,`barcode${Math.random()}${barcodeSuffix}`);
   }
 });
 const upload2 = multer({ storage: barcodeStorage });
