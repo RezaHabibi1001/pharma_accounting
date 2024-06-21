@@ -237,7 +237,7 @@ const getBackup = async (i18n ,dbName) => {
       const now = moment();
       const backupDate =  now.format('jYYYY-jMM-jDD');
 
-      const outputDir = `./../backups/${dbName}-${backupDate}`;
+      const outputDir = `/var/www/backups/${dbName}-${backupDate}`;
       const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
       
         await client.connect();
@@ -246,8 +246,8 @@ const getBackup = async (i18n ,dbName) => {
         // Fetch all collections in the database
         const collections = await db.listCollections().toArray();
 
-        if (!fs.existsSync("./../backups")) {
-          fs.mkdirSync("./../backups");
+        if (!fs.existsSync("/var/www/backups")) {
+          fs.mkdirSync("/var/www/backups");
       }
         // Create backup directory if it doesn't exist
         if (!fs.existsSync(outputDir)) {
