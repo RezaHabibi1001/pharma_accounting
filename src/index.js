@@ -36,7 +36,7 @@ let barcodeSuffix;
 // upload logo started
 const logoStorage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, `${__dirname}/uploads`)
+    cb(null, `/var/www/oxygenImages`)
   },
   filename: function (req, file, cb) {
     logoSuffix = path.extname(file.originalname);
@@ -48,14 +48,14 @@ app.post('/uploadLogo', upload.single('image'), async (req, res) => {
   if (!req.file) {
     return res.status(400).send('No files were uploaded.');
   }
-  let url =`${__dirname}/uploads/logo${logoSuffix}`
-  await Profile.findOneAndUpdate({ },{logo:url},{ new: true });
+  let url =`logo${Math.random()}${logoSuffix}`
+  await Profile.findOneAndUpdate({},{logo:url},{ new: true });
   res.send('File uploaded successfully.');
 });
 // upload barcode started
 const barcodeStorage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, `${__dirname}/uploads`)
+    cb(null, `/var/www/oxygenImages`)
   },
   filename: function (req, file, cb) {
     barcodeSuffix = path.extname(file.originalname);
@@ -67,7 +67,7 @@ app.post('/uploadBarcode', upload2.single('image'), async (req, res) => {
   if (!req.file) {
     return res.status(400).send('No files were uploaded.');
   }
-  let url =`${__dirname}/uploads/barcode${barcodeSuffix}`
+  let url =`barcode${Math.random()}${barcodeSuffix}`
   await Profile.findOneAndUpdate({ },{barcode:url},{ new: true });
   res.send('File uploaded successfully.');
 });
