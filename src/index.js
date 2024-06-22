@@ -12,6 +12,8 @@ const moment = require("moment")
 const {getLastMonthHejriDate , getCurrentHejriDate , getNextMonthHejriDate} =  require("./utils/helper")
 const multer = require('multer');
 const Profile = require("./models/profile");
+const fs = require('fs');
+const archiver = require('archiver');
 
 const PORT = process.env.PORT || 4000;
 if (process.env.NODE_ENV != "production") {
@@ -71,6 +73,46 @@ app.post('/uploadBarcode', upload2.single('image'), async (req, res) => {
   await Profile.findOneAndUpdate({ },{barcode:url},{ new: true });
   res.send('File uploaded successfully.');
 });
+
+app.get('/download', (req, res) => {
+  const directoryPath = req.query.path; // Get the path from the query parameter
+
+  // Check if the directory path is provided
+  if (!directoryPath) {
+    return res.status(400).send('Directory path is required');
+  }
+
+  // Resolve the directory path
+  const resolvedPath = path.resolve(directoryPath);
+
+  // Check if directory exists
+  if (!fs.existsSync(resolvedPath)) {
+    return res.status(404).send('Directory not found');
+  }
+
+  // Create a zip archive
+  const archive = archiver('zip', {
+    zlib: { level: 9 } // Set the compression level
+  });
+
+  // Handle errors
+  archive.on('error', (err) => {
+    res.status(500).send({ error: err.message });
+  });
+
+  // Set the response headers
+  res.attachment('directory.zip');
+
+  // Pipe the archive data to the response
+  archive.pipe(res);
+
+  // Append files from the directory to the archive
+  archive.directory(resolvedPath, false);
+  
+  // Finalize the archive
+  archive.finalize();
+});
+
 app.use(graphqlUploadExpress());
 app.use(cors());
 app.use("/", express.static(path.join(__dirname, "uploads")));

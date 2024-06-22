@@ -233,7 +233,7 @@ const getStatistic = async date => {
 const getBackup = async (i18n ,dbName) => {
   try {
       const uri = 'mongodb://localhost:27017';
-      
+      const dbName = process.env.DB_NAME
       const now = moment();
       const backupDate =  now.format('jYYYY-jMM-jDD');
 
@@ -273,7 +273,7 @@ const getBackup = async (i18n ,dbName) => {
             });
         }
 
-  return { message: i18n.__("backup_successfully_done") };
+  return { message: `${outputDir}` };
   } catch (error) {
     Sentry.captureException(error);
     throw error;
