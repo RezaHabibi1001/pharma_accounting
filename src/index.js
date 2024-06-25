@@ -33,12 +33,30 @@ app.use((req, res, next) => {
   req.i18n = i18n;
   next();
 });
+
+app.use(graphqlUploadExpress());
+app.use(cors());
+app.use("/", express.static(path.join(__dirname, "uploads")));
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "OPTIONS",
+    "GET",
+    "POST",
+    "PUT",
+    "PATCH",
+    "DELETE"
+  );
+  next();
+});
+
 let logoSuffix;
 let barcodeSuffix;
 // upload logo started
 const logoStorage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, `/var/www/oxygenImages`)
+    cb(null, `/var/www/omid_data/images`)
   },
   filename: function (req, file, cb) {
     logoSuffix = path.extname(file.originalname);
@@ -57,7 +75,7 @@ app.post('/uploadLogo', upload.single('image'), async (req, res) => {
 // upload barcode started
 const barcodeStorage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, `/var/www/oxygenImages`)
+    cb(null, `/var/www/omid_data/images`)
   },
   filename: function (req, file, cb) {
     barcodeSuffix = path.extname(file.originalname);
@@ -111,23 +129,6 @@ app.get('/download', (req, res) => {
   
   // Finalize the archive
   archive.finalize();
-});
-
-app.use(graphqlUploadExpress());
-app.use(cors());
-app.use("/", express.static(path.join(__dirname, "uploads")));
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "OPTIONS",
-    "GET",
-    "POST",
-    "PUT",
-    "PATCH",
-    "DELETE"
-  );
-  next();
 });
 
 const apolloServer = require("./apolloServer");
