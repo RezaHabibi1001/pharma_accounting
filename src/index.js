@@ -53,14 +53,16 @@ app.use((req, res, next) => {
 
 let logoSuffix;
 let barcodeSuffix;
+let logoRandom = Math.random();
+let barcodeRandom = Math.random();
 // upload logo started
 const logoStorage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, `/var/www/omid_data/images`)
+    cb(null, `/var/www/omid_oxygen/images`)
   },
   filename: function (req, file, cb) {
     logoSuffix = path.extname(file.originalname);
-     cb(null,`logo${Math.random()}${logoSuffix}`);
+     cb(null,`logo${logoRandom}${logoSuffix}`);
   }
 });
 const upload = multer({ storage: logoStorage });
@@ -68,18 +70,18 @@ app.post('/uploadLogo', upload.single('image'), async (req, res) => {
   if (!req.file) {
     return res.status(400).send('No files were uploaded.');
   }
-  let url =`logo${Math.random()}${logoSuffix}`
+  let url =`logo${logoRandom}${logoSuffix}`
   await Profile.findOneAndUpdate({},{logo:url},{ new: true });
   res.send('File uploaded successfully.');
 });
 // upload barcode started
 const barcodeStorage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, `/var/www/omid_data/images`)
+    cb(null, `/var/www/omid_oxygen/images`)
   },
   filename: function (req, file, cb) {
     barcodeSuffix = path.extname(file.originalname);
-     cb(null,`barcode${Math.random()}${barcodeSuffix}`);
+     cb(null,`barcode${barcodeRandom}${barcodeSuffix}`);
   }
 });
 const upload2 = multer({ storage: barcodeStorage });
@@ -87,7 +89,7 @@ app.post('/uploadBarcode', upload2.single('image'), async (req, res) => {
   if (!req.file) {
     return res.status(400).send('No files were uploaded.');
   }
-  let url =`barcode${Math.random()}${barcodeSuffix}`
+  let url =`barcode${barcodeRandom}${barcodeSuffix}`
   await Profile.findOneAndUpdate({ },{barcode:url},{ new: true });
   res.send('File uploaded successfully.');
 });
