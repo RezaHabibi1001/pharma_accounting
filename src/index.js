@@ -34,7 +34,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(graphqlUploadExpress());
 app.use(cors());
 app.use("/", express.static(path.join(__dirname, "uploads")));
 app.use((req, res, next) => {
@@ -56,7 +55,7 @@ let barcodeSuffix;
 // upload logo started
 const logoStorage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, `/var/www/omid_data/images`)
+    cb(null, `/var/www/oxygen/images`)
   },
   filename: function (req, file, cb) {
     logoSuffix = path.extname(file.originalname);
@@ -75,7 +74,7 @@ app.post('/uploadLogo', upload.single('image'), async (req, res) => {
 // upload barcode started
 const barcodeStorage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, `/var/www/omid_data/images`)
+    cb(null, `/var/www/oxygen/images`)
   },
   filename: function (req, file, cb) {
     barcodeSuffix = path.extname(file.originalname);
